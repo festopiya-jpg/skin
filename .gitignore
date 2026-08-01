@@ -1,0 +1,11 @@
+node_modules/
+.next/
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+backend/venv/
+backend/__pycache__/
+backend/*.pth
+.DS_Store

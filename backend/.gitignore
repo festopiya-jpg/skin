@@ -1,0 +1,12 @@
+venv/
+__pycache__/
+*.pyc
+.env
+.pytest_cache/
+
+# Ignore massive datasets and images
+*.csv
+*.jpg
+*.png
+data/
+archive/

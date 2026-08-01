@@ -1,0 +1,156 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { Users, Settings, Activity, Server, ShieldCheck, CalendarClock, Send } from 'lucide-react';
+
+export default function AdminDashboard() {
+  const [requests, setRequests] = useState([]);
+  
+  // Form states per request ID
+  const [appointmentDates, setAppointmentDates] = useState({});
+  const [messages, setMessages] = useState({});
+
+  useEffect(() => {
+    const loadedRequests = JSON.parse(localStorage.getItem('appointment_requests') || '[]');
+    setRequests(loadedRequests);
+  }, []);
+
+  const handleSendAppointment = (request) => {
+    const datetime = appointmentDates[request.id];
+    const message = messages[request.id] || 'Please arrive 10 minutes early. Upload your image prior to the appointment.';
+    
+    if (!datetime) {
+      alert('Please select a date and time for the appointment.');
+      return;
+    }
+
+    const scheduled = {
+      ...request,
+      datetime,
+      message,
+      status: 'Scheduled'
+    };
+
+    // 1. Remove from requests
+    const updatedRequests = requests.filter(r => r.id !== request.id);
+    setRequests(updatedRequests);
+    localStorage.setItem('appointment_requests', JSON.stringify(updatedRequests));
+
+    // 2. Add to scheduled_appointments (for patient to see)
+    const existingScheduled = JSON.parse(localStorage.getItem('scheduled_appointments') || '[]');
+    localStorage.setItem('scheduled_appointments', JSON.stringify([scheduled, ...existingScheduled]));
+    
+    alert(`Appointment scheduled for ${request.patientName} with Dr. ${request.doctorName}`);
+  };
+
+  return (
+    <div className="max-w-7xl mx-auto space-y-6 pb-20">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold text-white">System Admin Overview</h1>
+          <p className="text-slate-400 mt-1">Manage users, view system health, and schedule requested appointments.</p>
+        </div>
+      </div>
+
+      {/* Top Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="glass-card p-5 rounded-xl border-t-2 border-sky-500">
+          <div className="flex justify-between items-start mb-2">
+            <p className="text-slate-400 text-sm font-medium">Total Users</p>
+            <Users className="text-sky-500 w-5 h-5" />
+          </div>
+          <p className="text-2xl font-bold text-white">4,821</p>
+        </div>
+        <div className="glass-card p-5 rounded-xl border-t-2 border-indigo-500">
+          <div className="flex justify-between items-start mb-2">
+            <p className="text-slate-400 text-sm font-medium">AI Predictions</p>
+            <Activity className="text-indigo-500 w-5 h-5" />
+          </div>
+          <p className="text-2xl font-bold text-white">12,403</p>
+        </div>
+        <div className="glass-card p-5 rounded-xl border-t-2 border-emerald-500">
+          <div className="flex justify-between items-start mb-2">
+            <p className="text-slate-400 text-sm font-medium">Server Uptime</p>
+            <Server className="text-emerald-500 w-5 h-5" />
+          </div>
+          <p className="text-2xl font-bold text-white">99.99%</p>
+        </div>
+      </div>
+
+      {/* Appointment Management Block */}
+      <div className="glass-card rounded-2xl overflow-hidden mt-6">
+        <div className="p-6 border-b border-slate-700/50 flex items-center gap-3">
+          <div className="bg-amber-500/20 p-2 rounded-lg">
+            <CalendarClock className="text-amber-400 w-6 h-6" />
+          </div>
+          <h2 className="text-xl font-bold text-white">Pending Appointment Requests</h2>
+        </div>
+        
+        <div className="p-6">
+          {requests.length === 0 ? (
+            <div className="text-center py-10">
+              <CalendarClock className="w-12 h-12 text-slate-500 mx-auto mb-3 opacity-50" />
+              <p className="text-slate-400 font-medium">No pending appointment requests.</p>
+            </div>
+          ) : (
+            <div className="grid gap-6">
+              {requests.map((req) => (
+                <div key={req.id} className="bg-slate-800/50 border border-slate-700 rounded-xl p-5 flex flex-col lg:flex-row gap-6">
+                  
+                  {/* Request Info */}
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-white font-bold text-lg">{req.patientName}</span>
+                      <span className="px-2 py-0.5 rounded-md text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                        Needs Scheduling
+                      </span>
+                    </div>
+                    <p className="text-slate-400 text-sm">
+                      Requested Doctor: <span className="text-sky-300 font-medium">{req.doctorName}</span>
+                    </p>
+                    <p className="text-xs text-slate-500 mt-2">Request ID: {req.id}</p>
+                  </div>
+
+                  {/* Scheduling Form */}
+                  <div className="flex-1 flex flex-col gap-3">
+                    <div>
+                      <label className="text-xs text-slate-400 mb-1 block">Assign Date & Time</label>
+                      <input 
+                        type="datetime-local" 
+                        value={appointmentDates[req.id] || ''}
+                        onChange={(e) => setAppointmentDates(prev => ({...prev, [req.id]: e.target.value}))}
+                        className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs text-slate-400 mb-1 block">Custom Message</label>
+                      <textarea 
+                        value={messages[req.id] || ''}
+                        onChange={(e) => setMessages(prev => ({...prev, [req.id]: e.target.value}))}
+                        placeholder="Please arrive 10 minutes early. Upload your image prior to the appointment."
+                        className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-sm resize-none h-20"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex items-center justify-end border-t lg:border-t-0 lg:border-l border-slate-700/50 pt-4 lg:pt-0 lg:pl-6">
+                    <button 
+                      onClick={() => handleSendAppointment(req)}
+                      className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-xl transition-colors flex items-center gap-2 shadow-lg shadow-emerald-900/20 w-full lg:w-auto justify-center"
+                    >
+                      <Send className="w-5 h-5" />
+                      Send Details
+                    </button>
+                  </div>
+
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+    </div>
+  );
+}
