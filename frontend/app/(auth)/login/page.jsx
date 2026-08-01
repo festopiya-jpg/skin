@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Activity, Mail, Lock, Loader2 } from 'lucide-react';
-import { supabase, mockLogin } from '@/lib/supabaseClient';
+import { supabase } from '@/lib/supabaseClient';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -17,40 +17,26 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      if (supabase) {
-        // Real Supabase Auth
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        if (error) throw error;
+      // Real Supabase Auth
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) throw error;
 
-        // Optionally, fetch user role from a profiles table if you have one.
-        // For demo, we just route based on email like the mock does.
-        let role = data.user.user_metadata?.role || 'patient';
-        if (email.includes('doctor')) role = 'doctor';
-        if (email.includes('admin')) role = 'admin';
-        if (email.includes('medical') || email.includes('pharmacy')) role = 'medical';
-        if (email.includes('lab')) role = 'lab';
+      // Extract user metadata
+      let role = data.user.user_metadata?.role || 'patient';
+      let name = data.user.user_metadata?.full_name || email.split('@')[0];
+      
+      // Save session user
+      localStorage.setItem('session_user', JSON.stringify({ name, email, role }));
 
-        if (role === 'doctor') router.push('/doctor/dashboard');
-        else if (role === 'medical') router.push('/medical/dashboard');
-        else if (role === 'lab') router.push('/lab/dashboard');
-        else if (role === 'admin') router.push('/admin/dashboard');
-        else router.push('/patient/dashboard');
-      } else {
-        // Mock fallback
-        const { user } = await mockLogin(email, password);
-        let role = user.role;
-        if (email.includes('medical') || email.includes('pharmacy')) role = 'medical';
-        if (email.includes('lab')) role = 'lab';
-
-        if (role === 'doctor') router.push('/doctor/dashboard');
-        else if (role === 'medical') router.push('/medical/dashboard');
-        else if (role === 'lab') router.push('/lab/dashboard');
-        else if (role === 'admin') router.push('/admin/dashboard');
-        else router.push('/patient/dashboard');
-      }
+      if (role === 'doctor') router.push('/doctor/dashboard');
+      else if (role === 'medical') router.push('/medical/dashboard');
+      else if (role === 'lab') router.push('/lab/dashboard');
+      else if (role === 'admin') router.push('/admin/dashboard');
+      else router.push('/patient/dashboard');
+      
     } catch (error) {
       console.error(error);
       alert(error.message || 'Login failed');

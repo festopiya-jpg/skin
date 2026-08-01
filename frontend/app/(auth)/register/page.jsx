@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Activity, Mail, Lock, User, UserCircle, Loader2 } from 'lucide-react';
-import { supabase, mockRegister } from '@/lib/supabaseClient';
+import { supabase } from '@/lib/supabaseClient';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -21,57 +21,34 @@ export default function RegisterPage() {
     setErrorMsg('');
 
     try {
-      if (supabase) {
-        // Real Supabase Auth
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              full_name: name,
-              role: role,
-            }
+      // Real Supabase Auth
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: name,
+            role: role,
           }
-        });
-        if (error) {
-          console.warn("Supabase auth failed (likely rate limit). Falling back to mock auth...", error);
-          const { user } = await mockRegister(email, password, name, role);
-          
-          if (user.role === 'doctor') {
-            localStorage.setItem('session_user', JSON.stringify({ name, email, role }));
-            const doctors = JSON.parse(localStorage.getItem('system_doctors') || '[]');
-            if (!doctors.find(d => d.email === email)) {
-              localStorage.setItem('system_doctors', JSON.stringify([...doctors, { id: Date.now(), name, email, status: 'PENDING' }]));
-            }
-            router.push('/doctor/dashboard');
-          }
-          else if (user.role === 'medical') router.push('/medical/dashboard');
-          else if (user.role === 'lab') router.push('/lab/dashboard');
-          else router.push('/patient/dashboard');
-          return;
         }
-        
-        // On success, redirect based on role
-        localStorage.setItem('session_user', JSON.stringify({ name, email, role }));
-        
-        if (role === 'doctor') {
-          const doctors = JSON.parse(localStorage.getItem('system_doctors') || '[]');
-          if (!doctors.find(d => d.email === email)) {
-            localStorage.setItem('system_doctors', JSON.stringify([...doctors, { id: Date.now(), name, email, status: 'PENDING' }]));
-          }
-          router.push('/doctor/dashboard');
+      });
+      
+      if (error) throw error;
+      
+      // On success, redirect based on role
+      localStorage.setItem('session_user', JSON.stringify({ name, email, role }));
+      
+      if (role === 'doctor') {
+        const doctors = JSON.parse(localStorage.getItem('system_doctors') || '[]');
+        if (!doctors.find(d => d.email === email)) {
+          localStorage.setItem('system_doctors', JSON.stringify([...doctors, { id: Date.now(), name, email, status: 'PENDING' }]));
         }
-        else if (role === 'medical') router.push('/medical/dashboard');
-        else if (role === 'lab') router.push('/lab/dashboard');
-        else router.push('/patient/dashboard');
-      } else {
-        // Mock fallback
-        const { user } = await mockRegister(email, password, name, role);
-        if (user.role === 'doctor') router.push('/doctor/dashboard');
-        else if (user.role === 'medical') router.push('/medical/dashboard');
-        else if (user.role === 'lab') router.push('/lab/dashboard');
-        else router.push('/patient/dashboard');
+        router.push('/doctor/dashboard');
       }
+      else if (role === 'medical') router.push('/medical/dashboard');
+      else if (role === 'lab') router.push('/lab/dashboard');
+      else router.push('/patient/dashboard');
+      
     } catch (error) {
       console.error(error);
       setErrorMsg(error.message || 'An error occurred during registration.');
