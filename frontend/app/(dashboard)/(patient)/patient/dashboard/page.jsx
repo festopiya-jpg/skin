@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import BodySelector from '@/components/BodySelector';
-import { UploadCloud, ShieldAlert, FileText, CheckCircle2, UserCircle2, Clock, CalendarClock } from 'lucide-react';
+import { UploadCloud, ShieldAlert, FileText, CheckCircle2, UserCircle2, Clock, CalendarClock, X, Sparkles } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 export default function PatientDashboard() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -10,6 +11,7 @@ export default function PatientDashboard() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState(null);
   const [selectedBodyPart, setSelectedBodyPart] = useState('Unknown');
+  const [showGrokModal, setShowGrokModal] = useState(false);
   
   // New State variables for Appointment Workflow
   const [systemDoctors, setSystemDoctors] = useState([]);
@@ -263,6 +265,14 @@ export default function PatientDashboard() {
                 </div>
                 <p className="text-sm text-gray-600 mb-4">{result.explanation}</p>
                 
+                <button
+                  onClick={() => setShowGrokModal(true)}
+                  className="w-full mb-4 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center gap-2 shadow-lg transition-all"
+                >
+                  <Sparkles className="w-4 h-4 text-amber-200" />
+                  View Grok AI Detailed Analysis
+                </button>
+
                 <div className="border-t border-gray-200/50 pt-3">
                   <img src={`data:image/jpeg;base64,${result.heatmap_base64}`} alt="Heatmap" className="w-full rounded-lg border border-gray-200" />
                 </div>
@@ -307,6 +317,51 @@ export default function PatientDashboard() {
         </div>
 
       </div>
+
+      {/* Grok AI Modal Popup */}
+      {showGrokModal && result?.detailed_research && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="bg-gradient-to-r from-indigo-900 to-purple-900 p-5 flex justify-between items-center shrink-0">
+              <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-amber-400" />
+                Grok AI Clinical Research Report
+              </h2>
+              <button 
+                onClick={() => setShowGrokModal(false)}
+                className="text-white/70 hover:text-white transition-colors p-1"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <div className="p-6 overflow-y-auto grok-markdown text-gray-800 space-y-4">
+              <ReactMarkdown
+                components={{
+                  h2: ({node, ...props}) => <h2 className="text-2xl font-black text-indigo-900 mt-6 mb-3 border-b-2 border-indigo-100 pb-2" {...props} />,
+                  h3: ({node, ...props}) => <h3 className="text-xl font-bold text-gray-800 mt-4 mb-2" {...props} />,
+                  p: ({node, ...props}) => <p className="text-gray-600 leading-relaxed mb-4" {...props} />,
+                  ul: ({node, ...props}) => <ul className="list-disc pl-6 mb-4 text-gray-600 space-y-1" {...props} />,
+                  li: ({node, ...props}) => <li className="marker:text-indigo-400" {...props} />,
+                  strong: ({node, ...props}) => <strong className="font-bold text-gray-900" {...props} />,
+                }}
+              >
+                {result.detailed_research}
+              </ReactMarkdown>
+            </div>
+            
+            <div className="bg-gray-50 border-t border-gray-200 p-4 shrink-0 flex justify-end">
+              <button
+                onClick={() => setShowGrokModal(false)}
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg transition-colors"
+              >
+                Close Report
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
