@@ -53,15 +53,15 @@ export default function DoctorDashboard() {
     <div className="max-w-7xl mx-auto space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white">Doctor Dashboard</h1>
-          <p className="text-slate-400 mt-1">Welcome back, Dr. Smith. You have 2 pending XAI reviews.</p>
+          <h1 className="text-3xl font-bold text-gray-900">Doctor Dashboard</h1>
+          <p className="text-gray-500 mt-1">Welcome back, Dr. Smith. You have 2 pending XAI reviews.</p>
         </div>
         <div className="relative w-full md:w-64">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 w-4 h-4" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
           <input 
             type="text" 
             placeholder="Search patients..." 
-            className="w-full pl-9 pr-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-sky-500"
+            className="w-full pl-9 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-900 focus:outline-none focus:border-blue-500"
           />
         </div>
       </div>
@@ -71,17 +71,17 @@ export default function DoctorDashboard() {
         <div className="glass-card p-5 rounded-xl border-l-4 border-l-sky-500">
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-slate-400 text-sm font-medium">Total Patients</p>
-              <p className="text-3xl font-bold text-white mt-1">1,248</p>
+              <p className="text-gray-500 text-sm font-medium">Total Patients</p>
+              <p className="text-3xl font-bold text-gray-900 mt-1">1,248</p>
             </div>
-            <Users className="text-sky-500/50 w-10 h-10" />
+            <Users className="text-[#306CE9]/50 w-10 h-10" />
           </div>
         </div>
         <div className="glass-card p-5 rounded-xl border-l-4 border-l-rose-500 bg-rose-500/5">
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-slate-400 text-sm font-medium">Critical Reviews</p>
-              <p className="text-3xl font-bold text-rose-400 mt-1">2</p>
+              <p className="text-gray-500 text-sm font-medium">Critical Reviews</p>
+              <p className="text-3xl font-bold text-rose-600 mt-1">2</p>
             </div>
             <AlertTriangle className="text-rose-500/50 w-10 h-10" />
           </div>
@@ -89,8 +89,8 @@ export default function DoctorDashboard() {
         <div className="glass-card p-5 rounded-xl border-l-4 border-l-emerald-500">
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-slate-400 text-sm font-medium">AI Accuracy (30d)</p>
-              <p className="text-3xl font-bold text-white mt-1">94.5%</p>
+              <p className="text-gray-500 text-sm font-medium">AI Accuracy (30d)</p>
+              <p className="text-3xl font-bold text-gray-900 mt-1">94.5%</p>
             </div>
             <FileCheck className="text-emerald-500/50 w-10 h-10" />
           </div>
@@ -99,14 +99,14 @@ export default function DoctorDashboard() {
 
       {/* Patient Queue & Pending Reviews */}
       <div className="glass-card rounded-2xl overflow-hidden">
-        <div className="p-6 border-b border-slate-700/50 flex justify-between items-center">
-          <h2 className="text-xl font-bold text-white">Today's Queue & AI Insights</h2>
-          <Link href="/doctor/patients" className="text-sm text-sky-400 hover:text-sky-300">View All</Link>
+        <div className="p-6 border-b border-gray-200/50 flex justify-between items-center">
+          <h2 className="text-xl font-bold text-gray-900">Today's Queue & AI Insights</h2>
+          <Link href="/doctor/patients" className="text-sm text-[#306CE9] hover:text-blue-700">View All</Link>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-800/50 text-slate-400 text-sm border-b border-slate-700">
+              <tr className="bg-white/50 text-gray-500 text-sm border-b border-gray-200">
                 <th className="px-6 py-4 font-medium">Patient</th>
                 <th className="px-6 py-4 font-medium">AI Diagnosis</th>
                 <th className="px-6 py-4 font-medium">Severity</th>
@@ -116,37 +116,37 @@ export default function DoctorDashboard() {
             </thead>
             <tbody className="divide-y divide-slate-700/50">
               {patientQueue.map((patient) => (
-                <tr key={patient.id} className="hover:bg-slate-800/30 transition-colors">
-                  <td className="px-6 py-4 font-medium text-white">{patient.name}</td>
-                  <td className="px-6 py-4 text-slate-300">{patient.condition}</td>
+                <tr key={patient.id} className="hover:bg-white/30 transition-colors">
+                  <td className="px-6 py-4 font-medium text-gray-900">{patient.name}</td>
+                  <td className="px-6 py-4 text-gray-600">{patient.condition}</td>
                   <td className="px-6 py-4">
                     <span className={`px-2 py-1 rounded-md text-xs font-bold ${
-                      patient.severity === 'Severe' ? 'bg-rose-500/20 text-rose-400' : 
-                      patient.severity === 'Moderate' ? 'bg-amber-500/20 text-amber-400' : 
-                      'bg-emerald-500/20 text-emerald-400'
+                      patient.severity === 'Severe' ? 'bg-rose-100 text-rose-600' : 
+                      patient.severity === 'Moderate' ? 'bg-amber-100 text-amber-600' : 
+                      'bg-emerald-100 text-emerald-600'
                     }`}>
                       {patient.severity}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-slate-400">{patient.time}</td>
+                  <td className="px-6 py-4 text-gray-500">{patient.time}</td>
                   <td className="px-6 py-4">
                     {patient.status === 'Pending Review' ? (
                       <div className="flex gap-2">
                         <button 
                           onClick={() => approveMeds(patient)}
-                          className="text-xs bg-sky-500 hover:bg-sky-400 text-white px-3 py-1.5 rounded-lg transition-colors shadow-sm"
+                          className="text-xs bg-[#306CE9] hover:bg-blue-600 text-gray-900 px-3 py-1.5 rounded-lg transition-colors shadow-sm"
                         >
                           Approve Meds
                         </button>
                         <button 
                           onClick={() => orderLabs(patient)}
-                          className="text-xs bg-rose-500 hover:bg-rose-400 text-white px-3 py-1.5 rounded-lg transition-colors shadow-sm"
+                          className="text-xs bg-rose-500 hover:bg-rose-400 text-gray-900 px-3 py-1.5 rounded-lg transition-colors shadow-sm"
                         >
                           Order Labs
                         </button>
                       </div>
                     ) : (
-                      <button className="text-xs bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg transition-colors">
+                      <button className="text-xs bg-slate-700 hover:bg-gray-100 text-gray-900 px-3 py-1.5 rounded-lg transition-colors">
                         View Record
                       </button>
                     )}

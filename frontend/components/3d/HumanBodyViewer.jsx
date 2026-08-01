@@ -19,10 +19,10 @@ class ErrorBoundary extends Component {
     if (this.state.hasError) {
       return (
         <Html center>
-          <div className="flex flex-col items-center text-center p-4 bg-slate-800/90 rounded-xl border border-rose-500/30 min-w-[250px]">
-            <AlertCircle className="w-8 h-8 text-rose-400 mb-2" />
-            <p className="text-white text-sm font-medium">3D Model Not Found</p>
-            <p className="text-slate-400 text-xs mt-1">Please add human_body.gltf</p>
+          <div className="flex flex-col items-center text-center p-4 bg-white/90 rounded-xl border border-rose-500/30 min-w-[250px]">
+            <AlertCircle className="w-8 h-8 text-rose-600 mb-2" />
+            <p className="text-gray-900 text-sm font-medium">3D Model Not Found</p>
+            <p className="text-gray-500 text-xs mt-1">Please add human_body.gltf</p>
           </div>
         </Html>
       );
@@ -64,7 +64,7 @@ export default function HumanBodyViewer() {
 
   return (
     <div className="w-full h-[600px] relative bg-gray-900 rounded-xl overflow-hidden shadow-2xl border border-gray-700 flex items-center justify-center">
-      <div className="absolute top-4 left-4 z-10 bg-black/60 p-4 rounded-lg backdrop-blur-md text-white">
+      <div className="absolute top-4 left-4 z-10 bg-black/60 p-4 rounded-lg backdrop-blur-md text-gray-900">
         <h3 className="text-xl font-bold mb-2">3D Patient Visualization</h3>
         <p className="text-sm text-gray-300">Click on the model to map lesions.</p>
         {selectedPart && (
@@ -80,7 +80,7 @@ export default function HumanBodyViewer() {
         <directionalLight position={[-10, -10, -5]} intensity={0.5} />
         
         <ErrorBoundary>
-          <React.Suspense fallback={<Html center><div className="text-white">Loading 3D Model...</div></Html>}>
+          <React.Suspense fallback={<Html center><div className="text-gray-900">Loading 3D Model...</div></Html>}>
             <Model url="/models/human_body.gltf" onPartClick={handlePartClick} />
           </React.Suspense>
         </ErrorBoundary>

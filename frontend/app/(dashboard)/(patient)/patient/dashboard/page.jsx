@@ -111,8 +111,8 @@ export default function PatientDashboard() {
   return (
     <div className="max-w-7xl mx-auto space-y-6 pb-20">
       <div>
-        <h1 className="text-3xl font-bold text-white">My Dashboard</h1>
-        <p className="text-slate-400 mt-1">Upload a skin image for AI analysis or view your 3D health map.</p>
+        <h1 className="text-3xl font-bold text-gray-900">My Dashboard</h1>
+        <p className="text-gray-500 mt-1">Upload a skin image for AI analysis or view your 3D health map.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -122,36 +122,41 @@ export default function PatientDashboard() {
           
           {/* Appointment Workflow UI */}
           <div className="glass-card rounded-2xl p-6">
-            <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-              <CalendarClock className="text-indigo-400 w-5 h-5" />
+            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <CalendarClock className="text-indigo-600 w-5 h-5" />
               Consultation Status
             </h2>
             
             {workflowState === 'SELECT_DOCTOR' && (
               <div className="space-y-4">
-                <p className="text-slate-300">Select an available dermatologist to request a consultation:</p>
+                <p className="text-gray-600">Select an available dermatologist to request a consultation:</p>
                 {systemDoctors.length === 0 ? (
-                  <div className="p-4 bg-slate-800/50 rounded-xl border border-slate-700 text-center">
-                    <p className="text-slate-400 text-sm">No doctors currently registered in the system.</p>
-                    <p className="text-slate-500 text-xs mt-1">Register a doctor account first to see them here.</p>
+                  <div className="p-4 bg-white/50 rounded-xl border border-gray-200 text-center">
+                    <p className="text-gray-500 text-sm">No doctors currently registered in the system.</p>
+                    <p className="text-gray-400 text-xs mt-1">Register a doctor account first to see them here.</p>
                   </div>
                 ) : (
-                  <div className="grid gap-3">
-                    {systemDoctors.map(doc => (
-                      <div key={doc.id} className="flex justify-between items-center p-4 bg-slate-800/50 border border-slate-700 rounded-xl hover:bg-slate-800 transition-colors">
-                        <div className="flex items-center gap-3">
-                          <UserCircle2 className="text-slate-400 w-8 h-8" />
-                          <div>
-                            <p className="text-white font-bold">{doc.name}</p>
-                            <p className="text-slate-400 text-xs">{doc.email}</p>
-                          </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {systemDoctors.map((doc, idx) => (
+                      <div key={doc.id} className="bg-white border border-gray-100 shadow-lg shadow-gray-200/50 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col">
+                        <div className="h-40 w-full bg-gray-100 relative overflow-hidden">
+                          <img 
+                            src={`/doctors/doc${(idx % 2) + 1}.jpg`} 
+                            alt={doc.name} 
+                            className="w-full h-full object-cover object-top"
+                          />
                         </div>
-                        <button 
-                          onClick={() => handleSelectDoctor(doc)}
-                          className="bg-sky-500 hover:bg-sky-400 text-white text-sm px-4 py-2 rounded-lg font-medium transition-colors"
-                        >
-                          Select Doctor
-                        </button>
+                        <div className="p-5 flex flex-col flex-1">
+                          <h3 className="text-gray-900 font-bold text-lg">{doc.name}</h3>
+                          <p className="text-gray-500 text-xs mb-3 flex-1">{doc.email}</p>
+                          <p className="text-xs text-gray-500 mb-4 line-clamp-2">Routine check-ups, common illnesses, and health management with a general practitioner.</p>
+                          <button 
+                            onClick={() => handleSelectDoctor(doc)}
+                            className="w-full bg-[#306CE9] hover:bg-blue-600 text-white py-2.5 rounded-full font-medium transition-colors text-sm shadow-md shadow-blue-500/20"
+                          >
+                            Book Appointment
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -163,21 +168,21 @@ export default function PatientDashboard() {
               <div className="text-center py-6 space-y-4">
                 <Clock className="w-12 h-12 text-amber-500 mx-auto animate-pulse" />
                 <div>
-                  <h3 className="text-lg font-bold text-white">Request Sent to Admin</h3>
-                  <p className="text-slate-400 text-sm mt-1">Waiting for the hospital admin to assign you a consultation date and time.</p>
+                  <h3 className="text-lg font-bold text-gray-900">Request Sent to Admin</h3>
+                  <p className="text-gray-500 text-sm mt-1">Waiting for the hospital admin to assign you a consultation date and time.</p>
                 </div>
               </div>
             )}
 
             {workflowState === 'APPOINTMENT_SET' && scheduledAppointment && (
-              <div className="bg-emerald-900/20 border border-emerald-500/30 p-5 rounded-xl space-y-3">
+              <div className="bg-emerald-50 border border-emerald-200 p-5 rounded-xl space-y-3">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="text-emerald-400 font-bold">Appointment Confirmed!</h3>
-                    <p className="text-slate-300 text-sm mt-1">Doctor: {scheduledAppointment.doctorName}</p>
+                    <h3 className="text-emerald-600 font-bold">Appointment Confirmed!</h3>
+                    <p className="text-gray-600 text-sm mt-1">Doctor: {scheduledAppointment.doctorName}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-white font-bold">{new Date(scheduledAppointment.datetime).toLocaleString()}</p>
+                    <p className="text-gray-900 font-bold">{new Date(scheduledAppointment.datetime).toLocaleString()}</p>
                   </div>
                 </div>
                 <div className="bg-black/30 p-3 rounded-lg border border-emerald-500/20">
@@ -186,7 +191,7 @@ export default function PatientDashboard() {
                     {scheduledAppointment.message}
                   </p>
                 </div>
-                <p className="text-xs text-slate-400 pt-2">
+                <p className="text-xs text-gray-500 pt-2">
                   The AI Diagnostic tool is now unlocked. Please upload your lesion image below.
                 </p>
               </div>
@@ -196,47 +201,47 @@ export default function PatientDashboard() {
           {/* XAI Analysis Tool */}
           <div className="glass-card rounded-2xl p-6 flex flex-col flex-1">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                <ShieldAlert className="text-sky-400 w-5 h-5" />
+              <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                <ShieldAlert className="text-[#306CE9] w-5 h-5" />
                 AI Diagnostic Tool
               </h2>
               {workflowState !== 'APPOINTMENT_SET' && !result && (
-                <span className="text-xs font-bold px-2 py-1 bg-rose-500/20 text-rose-400 rounded-md">LOCKED</span>
+                <span className="text-xs font-bold px-2 py-1 bg-rose-100 text-rose-600 rounded-md">LOCKED</span>
               )}
             </div>
             
             {workflowState !== 'APPOINTMENT_SET' && !result ? (
-              <div className="flex-1 flex flex-col items-center justify-center border-2 border-dashed border-slate-700/50 rounded-xl bg-slate-900/50 p-8 text-center opacity-50">
+              <div className="flex-1 flex flex-col items-center justify-center border-2 border-dashed border-gray-200/50 rounded-xl bg-white/50 p-8 text-center opacity-50">
                 <UploadCloud className="w-12 h-12 text-slate-600 mb-3" />
-                <p className="text-slate-500 font-medium mb-1">Upload Locked</p>
+                <p className="text-gray-400 font-medium mb-1">Upload Locked</p>
                 <p className="text-xs text-slate-600">You must have a scheduled appointment to upload images.</p>
               </div>
             ) : !previewUrl && !result ? (
-              <div className="flex-1 flex flex-col items-center justify-center border-2 border-dashed border-emerald-500/30 rounded-xl bg-emerald-900/10 p-8 text-center hover:bg-emerald-900/20 transition-all">
-                <UploadCloud className="w-12 h-12 text-emerald-400 mb-3" />
-                <p className="text-white font-medium mb-1">Upload Lesion Image</p>
-                <p className="text-sm text-slate-400 mb-4">PNG, JPG up to 10MB</p>
-                <label className="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg cursor-pointer transition-colors font-medium shadow-lg shadow-emerald-500/20">
+              <div className="flex-1 flex flex-col items-center justify-center border-2 border-dashed border-emerald-200 rounded-xl bg-emerald-900/10 p-8 text-center hover:bg-emerald-50 transition-all">
+                <UploadCloud className="w-12 h-12 text-emerald-600 mb-3" />
+                <p className="text-gray-900 font-medium mb-1">Upload Lesion Image</p>
+                <p className="text-sm text-gray-500 mb-4">PNG, JPG up to 10MB</p>
+                <label className="bg-emerald-500 hover:bg-emerald-500 text-gray-900 px-4 py-2 rounded-lg cursor-pointer transition-colors font-medium shadow-lg shadow-emerald-500/20">
                   Browse Files
                   <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
                 </label>
               </div>
             ) : !result ? (
               <div className="flex flex-col gap-4 flex-1">
-                <div className="relative w-full h-48 rounded-xl overflow-hidden bg-black/50 border border-slate-700">
+                <div className="relative w-full h-48 rounded-xl overflow-hidden bg-black/50 border border-gray-200">
                   <img src={previewUrl} alt="Preview" className="w-full h-full object-contain" />
                 </div>
                 <div className="flex gap-2">
                   <button 
                     onClick={() => { setSelectedFile(null); setPreviewUrl(null); }}
-                    className="flex-1 py-2 px-4 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition-colors"
+                    className="flex-1 py-2 px-4 rounded-lg border border-gray-200 text-gray-600 hover:bg-white transition-colors"
                   >
                     Clear
                   </button>
                   <button 
                     onClick={handleAnalyze}
                     disabled={isAnalyzing}
-                    className="flex-1 py-2 px-4 rounded-lg bg-sky-500 hover:bg-sky-400 text-white font-medium transition-colors disabled:opacity-50"
+                    className="flex-1 py-2 px-4 rounded-lg bg-[#306CE9] hover:bg-blue-600 text-gray-900 font-medium transition-colors disabled:opacity-50"
                   >
                     {isAnalyzing ? 'Analyzing...' : 'Run AI Analysis & Send'}
                   </button>
@@ -246,20 +251,20 @@ export default function PatientDashboard() {
 
             {/* Results Area */}
             {result && (
-              <div className="p-5 rounded-xl border border-sky-500/30 bg-sky-500/10 animate-in fade-in slide-in-from-bottom-4">
+              <div className="p-5 rounded-xl border border-blue-500/30 bg-[#306CE9]/10 animate-in fade-in slide-in-from-bottom-4">
                 <div className="flex justify-between items-start mb-3">
                   <div>
-                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                      <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                    <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                      <CheckCircle2 className="w-5 h-5 text-emerald-600" />
                       Analysis Sent to Doctor!
                     </h3>
-                    <p className="text-sky-300 font-medium">Predicted: {result.disease}</p>
+                    <p className="text-blue-700 font-medium">Predicted: {result.disease}</p>
                   </div>
                 </div>
-                <p className="text-sm text-slate-300 mb-4">{result.explanation}</p>
+                <p className="text-sm text-gray-600 mb-4">{result.explanation}</p>
                 
-                <div className="border-t border-slate-700/50 pt-3">
-                  <img src={`data:image/jpeg;base64,${result.heatmap_base64}`} alt="Heatmap" className="w-full rounded-lg border border-slate-700" />
+                <div className="border-t border-gray-200/50 pt-3">
+                  <img src={`data:image/jpeg;base64,${result.heatmap_base64}`} alt="Heatmap" className="w-full rounded-lg border border-gray-200" />
                 </div>
               </div>
             )}
@@ -269,28 +274,28 @@ export default function PatientDashboard() {
         {/* Right Column: 3D Body & Records */}
         <div className="flex flex-col gap-6">
           <div className="glass-card rounded-2xl p-6 overflow-hidden">
-            <h2 className="text-xl font-bold text-white mb-4">3D Health Map</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">3D Health Map</h2>
             <BodySelector onSelect={(data) => setSelectedBodyPart(data.partName)} />
           </div>
           
           <div className="glass-card rounded-2xl p-6">
-            <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-              <FileText className="w-5 h-5 text-indigo-400" />
+            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <FileText className="w-5 h-5 text-indigo-600" />
               Past Visits & Return Codes
             </h2>
             <div className="space-y-3">
               {patientRecords.length === 0 ? (
-                <p className="text-slate-500 text-sm text-center py-4">No past visits recorded.</p>
+                <p className="text-gray-400 text-sm text-center py-4">No past visits recorded.</p>
               ) : (
                 patientRecords.map((record, idx) => (
-                  <div key={idx} className="flex justify-between items-center p-4 rounded-lg bg-slate-800/50 border border-slate-700">
+                  <div key={idx} className="flex justify-between items-center p-4 rounded-lg bg-white/50 border border-gray-200">
                     <div>
-                      <p className="text-sm font-bold text-white">{record.condition}</p>
-                      <p className="text-xs text-slate-400">Dr. {record.doctorName} • {record.date}</p>
+                      <p className="text-sm font-bold text-gray-900">{record.condition}</p>
+                      <p className="text-xs text-gray-500">Dr. {record.doctorName} • {record.date}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Return Code</p>
-                      <span className="bg-indigo-500/20 text-indigo-300 font-mono text-sm px-3 py-1 rounded-md border border-indigo-500/30">
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-1">Return Code</p>
+                      <span className="bg-indigo-100 text-indigo-600 font-mono text-sm px-3 py-1 rounded-md border border-indigo-200">
                         {record.returnCode}
                       </span>
                     </div>

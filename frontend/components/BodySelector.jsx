@@ -120,12 +120,12 @@ export default function BodySelector({ onSelect }) {
       </Canvas>
       
       {/* Helper text overlay */}
-      <div className="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium text-slate-300 shadow-sm pointer-events-none border border-slate-700">
+      <div className="absolute top-4 left-4 bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium text-gray-600 shadow-sm pointer-events-none border border-gray-200">
         Drag to rotate • Scroll to zoom
       </div>
       
       {selectedPart && (
-        <div className="absolute bottom-4 left-4 bg-sky-500/90 backdrop-blur-sm px-4 py-2 rounded-lg text-sm font-bold text-white shadow-lg pointer-events-none">
+        <div className="absolute bottom-4 left-4 bg-[#306CE9]/90 backdrop-blur-sm px-4 py-2 rounded-lg text-sm font-bold text-gray-900 shadow-lg pointer-events-none">
           Selected: {selectedPart}
         </div>
       )}
