@@ -1,12 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Users, AlertTriangle, FileCheck, Search } from 'lucide-react';
+import { Users, AlertTriangle, FileCheck, Search, Sparkles, X } from 'lucide-react';
 import Link from 'next/link';
+import ReactMarkdown from 'react-markdown';
 
 export default function DoctorDashboard() {
   const [patientQueue, setPatientQueue] = useState([]);
   const [doctorProfile, setDoctorProfile] = useState({ name: 'Smith', status: 'APPROVED' });
+  const [selectedResearch, setSelectedResearch] = useState(null);
 
   useEffect(() => {
     // Load dynamically submitted diagnoses from Patient Dashboard via localStorage
@@ -154,7 +156,14 @@ export default function DoctorDashboard() {
                   <td className="px-6 py-4 text-gray-500">{patient.time}</td>
                   <td className="px-6 py-4">
                     {patient.status === 'Pending Review' ? (
-                      <div className="flex gap-2">
+                      <div className="flex flex-wrap gap-2">
+                        <button 
+                          onClick={() => setSelectedResearch(patient.research)}
+                          className="text-xs bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-3 py-1.5 rounded-lg transition-colors shadow-sm font-bold flex items-center gap-1"
+                        >
+                          <Sparkles className="w-3 h-3" />
+                          View Grok
+                        </button>
                         <button 
                           onClick={() => approveMeds(patient)}
                           className="text-xs bg-[#306CE9] hover:bg-blue-600 text-white px-3 py-1.5 rounded-lg transition-colors shadow-sm font-medium"
@@ -180,6 +189,51 @@ export default function DoctorDashboard() {
           </table>
         </div>
       </div>
+
+      {/* Grok AI Modal Popup for Doctor */}
+      {selectedResearch && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="bg-gradient-to-r from-indigo-900 to-purple-900 p-5 flex justify-between items-center shrink-0">
+              <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-amber-400" />
+                Patient Grok AI Clinical Research Report
+              </h2>
+              <button 
+                onClick={() => setSelectedResearch(null)}
+                className="text-white/70 hover:text-white transition-colors p-1"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <div className="p-6 overflow-y-auto grok-markdown text-gray-800 space-y-4">
+              <ReactMarkdown
+                components={{
+                  h2: ({node, ...props}) => <h2 className="text-2xl font-black text-indigo-900 mt-6 mb-3 border-b-2 border-indigo-100 pb-2" {...props} />,
+                  h3: ({node, ...props}) => <h3 className="text-xl font-bold text-gray-800 mt-4 mb-2" {...props} />,
+                  p: ({node, ...props}) => <p className="text-gray-600 leading-relaxed mb-4" {...props} />,
+                  ul: ({node, ...props}) => <ul className="list-disc pl-6 mb-4 text-gray-600 space-y-1" {...props} />,
+                  li: ({node, ...props}) => <li className="marker:text-indigo-400" {...props} />,
+                  strong: ({node, ...props}) => <strong className="font-bold text-gray-900" {...props} />,
+                }}
+              >
+                {selectedResearch}
+              </ReactMarkdown>
+            </div>
+            
+            <div className="bg-gray-50 border-t border-gray-200 p-4 shrink-0 flex justify-end">
+              <button
+                onClick={() => setSelectedResearch(null)}
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg transition-colors"
+              >
+                Close Report
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
