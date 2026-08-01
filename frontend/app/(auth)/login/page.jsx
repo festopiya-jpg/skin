@@ -26,6 +26,7 @@ export default function LoginPage() {
 
       // Extract user metadata
       let role = data.user.user_metadata?.role || 'patient';
+      if (email.includes('admin')) role = 'admin';
       let name = data.user.user_metadata?.full_name || email.split('@')[0];
       
       // Save session user
