@@ -68,8 +68,7 @@ export default function LoginPage() {
           </div>
           <h2 className="text-2xl font-bold text-gray-900">Welcome Back</h2>
           <p className="text-gray-500 text-sm mt-1 text-center">
-            Enter your credentials to access the DermXAI Hospital System. <br/>
-            (Tip: Use <b>admin@gmail.com</b> / <b>admin123</b> to login as Admin)
+            Enter your credentials to access the DermXAI Hospital System.
           </p>
         </div>
 
