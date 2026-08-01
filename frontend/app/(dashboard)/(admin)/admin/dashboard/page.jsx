@@ -5,6 +5,7 @@ import { Users, Settings, Activity, Server, ShieldCheck, CalendarClock, Send } f
 
 export default function AdminDashboard() {
   const [requests, setRequests] = useState([]);
+  const [pendingDoctors, setPendingDoctors] = useState([]);
   
   // Form states per request ID
   const [appointmentDates, setAppointmentDates] = useState({});
@@ -13,7 +14,18 @@ export default function AdminDashboard() {
   useEffect(() => {
     const loadedRequests = JSON.parse(localStorage.getItem('appointment_requests') || '[]');
     setRequests(loadedRequests);
+
+    const doctors = JSON.parse(localStorage.getItem('system_doctors') || '[]');
+    setPendingDoctors(doctors.filter(d => d.status === 'PENDING'));
   }, []);
+
+  const handleApproveDoctor = (email) => {
+    const doctors = JSON.parse(localStorage.getItem('system_doctors') || '[]');
+    const updated = doctors.map(d => d.email === email ? { ...d, status: 'APPROVED' } : d);
+    localStorage.setItem('system_doctors', JSON.stringify(updated));
+    setPendingDoctors(updated.filter(d => d.status === 'PENDING'));
+    alert('Doctor approved successfully. Patients can now book appointments with them.');
+  };
 
   const handleSendAppointment = (request) => {
     const datetime = appointmentDates[request.id];
@@ -76,6 +88,37 @@ export default function AdminDashboard() {
           <p className="text-2xl font-bold text-gray-900">99.99%</p>
         </div>
       </div>
+
+      {/* Doctor Verification Block */}
+      {pendingDoctors.length > 0 && (
+        <div className="glass-card rounded-2xl overflow-hidden mt-6 border border-amber-200">
+          <div className="p-6 border-b border-gray-200/50 flex items-center gap-3 bg-amber-50">
+            <div className="bg-amber-100 p-2 rounded-lg">
+              <ShieldCheck className="text-amber-600 w-6 h-6" />
+            </div>
+            <h2 className="text-xl font-bold text-gray-900">Pending Doctor Verifications</h2>
+          </div>
+          <div className="p-6 grid gap-4">
+            {pendingDoctors.map((doc, idx) => (
+              <div key={idx} className="bg-white border border-gray-200 rounded-xl p-5 flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <img src={`/doctors/doc${(idx % 2) + 1}.jpg`} alt={doc.name} className="w-12 h-12 rounded-full object-cover border-2 border-gray-200" />
+                  <div>
+                    <h3 className="font-bold text-gray-900">{doc.name}</h3>
+                    <p className="text-sm text-gray-500">{doc.email}</p>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => handleApproveDoctor(doc.email)}
+                  className="bg-[#306CE9] hover:bg-blue-600 text-white font-bold px-4 py-2 rounded-lg transition-colors text-sm"
+                >
+                  Approve Doctor
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Appointment Management Block */}
       <div className="glass-card rounded-2xl overflow-hidden mt-6">

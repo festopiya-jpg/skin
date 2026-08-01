@@ -18,9 +18,9 @@ export default function PatientDashboard() {
   const [patientRecords, setPatientRecords] = useState([]);
 
   useEffect(() => {
-    // 1. Load System Doctors
+    // 1. Load System Doctors (Only APPROVED)
     const docs = JSON.parse(localStorage.getItem('system_doctors') || '[]');
-    setSystemDoctors(docs);
+    setSystemDoctors(docs.filter(d => d.status === 'APPROVED' || !d.status)); // Support legacy mock docs with no status
 
     // 2. Determine Patient State
     const myScheduled = JSON.parse(localStorage.getItem('scheduled_appointments') || '[]');

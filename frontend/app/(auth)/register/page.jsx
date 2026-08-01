@@ -38,9 +38,10 @@ export default function RegisterPage() {
           const { user } = await mockRegister(email, password, name, role);
           
           if (user.role === 'doctor') {
+            localStorage.setItem('session_user', JSON.stringify({ name, email, role }));
             const doctors = JSON.parse(localStorage.getItem('system_doctors') || '[]');
             if (!doctors.find(d => d.email === email)) {
-              localStorage.setItem('system_doctors', JSON.stringify([...doctors, { id: Date.now(), name, email }]));
+              localStorage.setItem('system_doctors', JSON.stringify([...doctors, { id: Date.now(), name, email, status: 'PENDING' }]));
             }
             router.push('/doctor/dashboard');
           }
@@ -51,10 +52,12 @@ export default function RegisterPage() {
         }
         
         // On success, redirect based on role
+        localStorage.setItem('session_user', JSON.stringify({ name, email, role }));
+        
         if (role === 'doctor') {
           const doctors = JSON.parse(localStorage.getItem('system_doctors') || '[]');
           if (!doctors.find(d => d.email === email)) {
-            localStorage.setItem('system_doctors', JSON.stringify([...doctors, { id: Date.now(), name, email }]));
+            localStorage.setItem('system_doctors', JSON.stringify([...doctors, { id: Date.now(), name, email, status: 'PENDING' }]));
           }
           router.push('/doctor/dashboard');
         }

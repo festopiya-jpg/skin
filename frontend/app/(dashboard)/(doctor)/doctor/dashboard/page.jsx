@@ -6,12 +6,25 @@ import Link from 'next/link';
 
 export default function DoctorDashboard() {
   const [patientQueue, setPatientQueue] = useState([]);
+  const [doctorProfile, setDoctorProfile] = useState({ name: 'Smith', status: 'APPROVED' });
 
   useEffect(() => {
     // Load dynamically submitted diagnoses from Patient Dashboard via localStorage
     const saved = localStorage.getItem('pending_diagnoses');
     if (saved) {
       setPatientQueue(JSON.parse(saved));
+    }
+    
+    // Load session info
+    const session = JSON.parse(localStorage.getItem('session_user') || '{}');
+    if (session.name) {
+      // Find my status in system_doctors
+      const docs = JSON.parse(localStorage.getItem('system_doctors') || '[]');
+      const myProfile = docs.find(d => d.email === session.email) || {};
+      setDoctorProfile({
+        name: session.name,
+        status: myProfile.status || 'APPROVED'
+      });
     }
   }, []);
 
@@ -51,12 +64,19 @@ export default function DoctorDashboard() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
+      {doctorProfile.status === 'PENDING' && (
+        <div className="bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-xl flex items-center gap-3">
+          <AlertTriangle className="w-5 h-5 text-amber-600" />
+          <p className="text-sm font-medium">Your account is pending verification. Patients cannot book appointments with you until the Admin approves your profile.</p>
+        </div>
+      )}
+
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="flex items-center gap-4">
-          <img src="/doctors/doc1.jpg" alt="Dr. Smith" className="w-16 h-16 rounded-full object-cover border-4 border-white shadow-md" />
+          <img src="/doctors/doc1.jpg" alt={`Dr. ${doctorProfile.name}`} className="w-16 h-16 rounded-full object-cover border-4 border-white shadow-md" />
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Doctor Dashboard</h1>
-            <p className="text-gray-500 mt-1">Welcome back, Dr. Smith. You have {patientQueue.length} pending XAI reviews.</p>
+            <p className="text-gray-500 mt-1">Welcome back, Dr. {doctorProfile.name}. You have {patientQueue.length} pending XAI reviews.</p>
           </div>
         </div>
         <div className="relative w-full md:w-64 mt-4 md:mt-0">

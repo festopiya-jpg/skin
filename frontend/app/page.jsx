@@ -1,22 +1,31 @@
 import Link from 'next/link';
-import { Activity, ShieldCheck, Microscope, ArrowRight } from 'lucide-react';
+import { Activity, CalendarClock, Building2, ClipboardEdit } from 'lucide-react';
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden">
+    <div className="min-h-screen flex flex-col bg-white">
       {/* Navigation */}
-      <nav className="w-full glass-panel py-4 px-6 flex justify-between items-center fixed top-0 z-50">
+      <nav className="w-full bg-white/80 backdrop-blur-md py-4 px-8 flex justify-between items-center fixed top-0 z-50 border-b border-gray-100">
         <div className="flex items-center gap-2">
-          <Activity className="text-[#306CE9] w-8 h-8" />
-          <span className="text-xl font-bold tracking-tight text-gray-900">DermXAI</span>
+          <Activity className="text-[#306CE9] w-6 h-6" />
+          <span className="text-xl font-bold text-gray-900 tracking-tight">DermXAI</span>
         </div>
+        
+        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
+          <Link href="#" className="text-[#306CE9]">Home</Link>
+          <Link href="#" className="hover:text-gray-900 transition-colors">About Us</Link>
+          <Link href="#" className="hover:text-gray-900 transition-colors">Services</Link>
+          <Link href="#" className="hover:text-gray-900 transition-colors">Doctors</Link>
+          <Link href="#" className="hover:text-gray-900 transition-colors">Contact</Link>
+        </div>
+
         <div className="flex items-center gap-4">
-          <Link href="/login" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
-            Login
+          <Link href="/login" className="text-sm font-bold text-gray-700 hover:text-gray-900 transition-colors">
+            Log in
           </Link>
           <Link 
             href="/register" 
-            className="text-sm bg-[#306CE9] hover:bg-blue-600 text-gray-900 px-5 py-2 rounded-full font-medium transition-all shadow-[0_0_15px_rgba(14,165,233,0.5)]"
+            className="text-sm bg-[#306CE9] hover:bg-blue-700 text-white px-6 py-2.5 rounded-full font-medium transition-all shadow-md shadow-blue-500/20"
           >
             Get Started
           </Link>
@@ -24,71 +33,63 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <main className="flex-1 flex flex-col items-center justify-center px-4 pt-32 pb-20 text-center">
-        <div className="max-w-4xl space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-card text-[#306CE9] text-sm font-medium mb-4">
-            <Microscope className="w-4 h-4" />
-            <span>Next-Generation Dermatological Analysis</span>
-          </div>
-          
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter leading-tight text-gray-900">
-            Skin Care Diagnostic <br />
-            <span className="text-gradient">Hospital System</span>
+      <main className="flex-1 flex flex-col items-center pt-32 px-4 md:px-8 max-w-7xl mx-auto w-full">
+        
+        {/* Hero Text */}
+        <div className="text-center max-w-3xl mb-12">
+          <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
+            Seamless Hospital Booking for Your Health Needs
           </h1>
-          
-          <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto">
-            Empowering doctors and patients with Explainable AI predictions, interactive 3D lesion mapping, and comprehensive Electronic Health Records.
+          <p className="text-lg text-gray-500 max-w-xl mx-auto">
+            Book appointments easily with top hospitals and trusted doctors. 
+            Get fast access to medical services and expert care.
           </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8">
-            <Link 
-              href="/login" 
-              className="group flex items-center justify-center gap-2 bg-white text-slate-900 px-8 py-4 rounded-full font-bold text-lg hover:scale-105 transition-all shadow-[0_0_30px_rgba(255,255,255,0.3)] w-full sm:w-auto"
-            >
-              Enter Dashboard
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link 
-              href="#features" 
-              className="flex items-center justify-center gap-2 glass-card px-8 py-4 rounded-full font-bold text-lg hover:bg-white/80 transition-all w-full sm:w-auto text-gray-900"
-            >
-              Explore Features
-            </Link>
-          </div>
         </div>
 
-        {/* Feature Highlights */}
-        <div id="features" className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl w-full mt-32">
-          <div className="glass-card p-8 rounded-2xl flex flex-col items-start text-left">
-            <div className="bg-[#306CE9]/20 p-4 rounded-xl mb-6">
-              <Microscope className="text-[#306CE9] w-8 h-8" />
-            </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-3">Explainable AI</h3>
-            <p className="text-gray-500">
-              Advanced PyTorch models provide disease predictions with Grad-CAM heatmaps so doctors understand exactly why a diagnosis was made.
-            </p>
-          </div>
+        {/* Hero Image & Floating Cards */}
+        <div className="relative w-full max-w-5xl h-[500px] md:h-[600px] rounded-3xl overflow-hidden shadow-2xl mb-20">
+          <img 
+            src="/hero.jpg" 
+            alt="Doctor interacting with patient" 
+            className="w-full h-full object-cover object-center"
+          />
           
-          <div className="glass-card p-8 rounded-2xl flex flex-col items-start text-left">
-            <div className="bg-indigo-100 p-4 rounded-xl mb-6">
-              <Activity className="text-indigo-600 w-8 h-8" />
-            </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-3">3D Body Mapping</h3>
-            <p className="text-gray-500">
-              Interactive 3D human body visualization for precise lesion mapping, severity tracking, and patient education.
-            </p>
-          </div>
+          {/* Overlay Gradient for readability at bottom */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
 
-          <div className="glass-card p-8 rounded-2xl flex flex-col items-start text-left">
-            <div className="bg-emerald-100 p-4 rounded-xl mb-6">
-              <ShieldCheck className="text-emerald-600 w-8 h-8" />
+          {/* Floating Feature Cards */}
+          <div className="absolute bottom-6 left-0 right-0 flex flex-col md:flex-row items-center justify-center gap-4 px-6 z-10">
+            
+            {/* Blue Card */}
+            <div className="bg-[#306CE9] text-white p-5 rounded-2xl w-full md:w-64 shadow-xl transform md:-translate-y-4 hover:-translate-y-6 transition-transform">
+              <div className="bg-white/20 w-10 h-10 rounded-full flex items-center justify-center mb-4">
+                <CalendarClock className="w-5 h-5 text-white" />
+              </div>
+              <h3 className="font-bold text-lg mb-1">Doctor Schedule</h3>
+              <p className="text-blue-100 text-xs">Find and schedule appointments with top doctors at your preferred hospital.</p>
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-3">Role-Based Access</h3>
-            <p className="text-gray-500">
-              Secure, distinct environments for Patients, Doctors, and Admins. Complete EHR integration with strict data privacy.
-            </p>
+
+            {/* White Card 1 */}
+            <div className="bg-white text-gray-900 p-5 rounded-2xl w-full md:w-64 shadow-xl hover:-translate-y-2 transition-transform">
+              <div className="bg-blue-50 w-10 h-10 rounded-full flex items-center justify-center mb-4">
+                <Building2 className="w-5 h-5 text-[#306CE9]" />
+              </div>
+              <h3 className="font-bold text-lg mb-1">Room Info</h3>
+              <p className="text-gray-500 text-xs">Immediate access to emergency care. Find the nearest hospital and get urgent help.</p>
+            </div>
+
+            {/* White Card 2 */}
+            <div className="bg-white text-gray-900 p-5 rounded-2xl w-full md:w-64 shadow-xl hover:-translate-y-2 transition-transform">
+              <div className="bg-blue-50 w-10 h-10 rounded-full flex items-center justify-center mb-4">
+                <ClipboardEdit className="w-5 h-5 text-[#306CE9]" />
+              </div>
+              <h3 className="font-bold text-lg mb-1">Online Registration</h3>
+              <p className="text-gray-500 text-xs">Register easily online to book your check-ups and avoid waiting in lines.</p>
+            </div>
+
           </div>
         </div>
+
       </main>
     </div>
   );
