@@ -17,7 +17,14 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      // Real Supabase Auth
+      // Hardcoded Admin Bypass (No Supabase account required)
+      if (email === 'admin@gmail.com' && password === 'admin123') {
+        localStorage.setItem('session_user', JSON.stringify({ name: 'System Admin', email: 'admin@gmail.com', role: 'admin' }));
+        router.push('/admin/dashboard');
+        return;
+      }
+
+      // Real Supabase Auth for everyone else
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -62,7 +69,7 @@ export default function LoginPage() {
           <h2 className="text-2xl font-bold text-gray-900">Welcome Back</h2>
           <p className="text-gray-500 text-sm mt-1 text-center">
             Enter your credentials to access the DermXAI Hospital System. <br/>
-            (Tip: Use 'doctor@...' to login as Doctor)
+            (Tip: Use <b>admin@gmail.com</b> / <b>admin123</b> to login as Admin)
           </p>
         </div>
 
