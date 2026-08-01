@@ -52,11 +52,14 @@ export default function DoctorDashboard() {
   return (
     <div className="max-w-7xl mx-auto space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Doctor Dashboard</h1>
-          <p className="text-gray-500 mt-1">Welcome back, Dr. Smith. You have 2 pending XAI reviews.</p>
+        <div className="flex items-center gap-4">
+          <img src="/doctors/doc1.jpg" alt="Dr. Smith" className="w-16 h-16 rounded-full object-cover border-4 border-white shadow-md" />
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Doctor Dashboard</h1>
+            <p className="text-gray-500 mt-1">Welcome back, Dr. Smith. You have {patientQueue.length} pending XAI reviews.</p>
+          </div>
         </div>
-        <div className="relative w-full md:w-64">
+        <div className="relative w-full md:w-64 mt-4 md:mt-0">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
           <input 
             type="text" 
@@ -134,13 +137,13 @@ export default function DoctorDashboard() {
                       <div className="flex gap-2">
                         <button 
                           onClick={() => approveMeds(patient)}
-                          className="text-xs bg-[#306CE9] hover:bg-blue-600 text-gray-900 px-3 py-1.5 rounded-lg transition-colors shadow-sm"
+                          className="text-xs bg-[#306CE9] hover:bg-blue-600 text-white px-3 py-1.5 rounded-lg transition-colors shadow-sm font-medium"
                         >
                           Approve Meds
                         </button>
                         <button 
                           onClick={() => orderLabs(patient)}
-                          className="text-xs bg-rose-500 hover:bg-rose-400 text-gray-900 px-3 py-1.5 rounded-lg transition-colors shadow-sm"
+                          className="text-xs bg-rose-500 hover:bg-rose-600 text-white px-3 py-1.5 rounded-lg transition-colors shadow-sm font-medium"
                         >
                           Order Labs
                         </button>

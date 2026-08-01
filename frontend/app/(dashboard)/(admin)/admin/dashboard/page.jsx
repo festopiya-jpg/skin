@@ -98,17 +98,20 @@ export default function AdminDashboard() {
                 <div key={req.id} className="bg-white/50 border border-gray-200 rounded-xl p-5 flex flex-col lg:flex-row gap-6">
                   
                   {/* Request Info */}
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-gray-900 font-bold text-lg">{req.patientName}</span>
-                      <span className="px-2 py-0.5 rounded-md text-xs font-bold bg-amber-100 text-amber-600 border border-amber-500/30">
-                        Needs Scheduling
-                      </span>
+                  <div className="flex-1 flex gap-4">
+                    <img src={`/doctors/doc${(req.id % 2) + 1}.jpg`} alt={req.doctorName} className="w-16 h-16 rounded-full object-cover border-2 border-gray-200 shadow-sm" />
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-gray-900 font-bold text-lg">{req.patientName}</span>
+                        <span className="px-2 py-0.5 rounded-md text-xs font-bold bg-amber-100 text-amber-600 border border-amber-500/30">
+                          Needs Scheduling
+                        </span>
+                      </div>
+                      <p className="text-gray-500 text-sm">
+                        Requested Doctor: <span className="text-[#306CE9] font-medium">{req.doctorName}</span>
+                      </p>
+                      <p className="text-xs text-gray-400 mt-2">Request ID: {req.id}</p>
                     </div>
-                    <p className="text-gray-500 text-sm">
-                      Requested Doctor: <span className="text-blue-700 font-medium">{req.doctorName}</span>
-                    </p>
-                    <p className="text-xs text-gray-400 mt-2">Request ID: {req.id}</p>
                   </div>
 
                   {/* Scheduling Form */}
@@ -137,7 +140,7 @@ export default function AdminDashboard() {
                   <div className="flex items-center justify-end border-t lg:border-t-0 lg:border-l border-gray-200/50 pt-4 lg:pt-0 lg:pl-6">
                     <button 
                       onClick={() => handleSendAppointment(req)}
-                      className="bg-emerald-500 hover:bg-emerald-500 text-gray-900 font-bold px-6 py-3 rounded-xl transition-colors flex items-center gap-2 shadow-lg shadow-emerald-900/20 w-full lg:w-auto justify-center"
+                      className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-6 py-3 rounded-xl transition-colors flex items-center gap-2 shadow-lg shadow-emerald-500/20 w-full lg:w-auto justify-center"
                     >
                       <Send className="w-5 h-5" />
                       Send Details
