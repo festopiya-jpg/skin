@@ -46,48 +46,47 @@ export default function LandingPage() {
           </p>
         </div>
 
-        {/* Hero Image & Floating Cards */}
-        <div className="relative w-full max-w-5xl h-[500px] md:h-[600px] rounded-3xl overflow-hidden shadow-2xl mb-20">
+        {/* Hero Image */}
+        <div className="relative w-full max-w-5xl h-[300px] md:h-[600px] rounded-3xl overflow-hidden shadow-2xl">
           <img 
             src="/hero.jpg" 
             alt="Doctor interacting with patient" 
             className="w-full h-full object-cover object-center"
           />
-          
           {/* Overlay Gradient for readability at bottom */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+        </div>
 
-          {/* Floating Feature Cards */}
-          <div className="absolute bottom-6 left-0 right-0 flex flex-col md:flex-row items-center justify-center gap-4 px-6 z-10">
-            
-            {/* Blue Card */}
-            <div className="bg-[#306CE9] text-white p-5 rounded-2xl w-full md:w-64 shadow-xl transform md:-translate-y-4 hover:-translate-y-6 transition-transform">
-              <div className="bg-white/20 w-10 h-10 rounded-full flex items-center justify-center mb-4">
-                <CalendarClock className="w-5 h-5 text-white" />
-              </div>
-              <h3 className="font-bold text-lg mb-1">Doctor Schedule</h3>
-              <p className="text-blue-100 text-xs">Find and schedule appointments with top doctors at your preferred hospital.</p>
+        {/* Floating Feature Cards */}
+        <div className="flex flex-col md:flex-row items-stretch justify-center gap-4 px-4 z-10 w-full max-w-5xl -mt-16 md:-mt-24 mb-20">
+          
+          {/* Blue Card */}
+          <div className="bg-[#306CE9] text-white p-5 rounded-2xl w-full md:w-64 shadow-xl transform hover:-translate-y-2 transition-transform">
+            <div className="bg-white/20 w-10 h-10 rounded-full flex items-center justify-center mb-4">
+              <CalendarClock className="w-5 h-5 text-white" />
             </div>
-
-            {/* White Card 1 */}
-            <div className="bg-white text-gray-900 p-5 rounded-2xl w-full md:w-64 shadow-xl hover:-translate-y-2 transition-transform">
-              <div className="bg-blue-50 w-10 h-10 rounded-full flex items-center justify-center mb-4">
-                <Building2 className="w-5 h-5 text-[#306CE9]" />
-              </div>
-              <h3 className="font-bold text-lg mb-1">Room Info</h3>
-              <p className="text-gray-500 text-xs">Immediate access to emergency care. Find the nearest hospital and get urgent help.</p>
-            </div>
-
-            {/* White Card 2 */}
-            <div className="bg-white text-gray-900 p-5 rounded-2xl w-full md:w-64 shadow-xl hover:-translate-y-2 transition-transform">
-              <div className="bg-blue-50 w-10 h-10 rounded-full flex items-center justify-center mb-4">
-                <ClipboardEdit className="w-5 h-5 text-[#306CE9]" />
-              </div>
-              <h3 className="font-bold text-lg mb-1">Online Registration</h3>
-              <p className="text-gray-500 text-xs">Register easily online to book your check-ups and avoid waiting in lines.</p>
-            </div>
-
+            <h3 className="font-bold text-lg mb-1">Doctor Schedule</h3>
+            <p className="text-blue-100 text-sm">Find and schedule appointments with top doctors at your preferred hospital.</p>
           </div>
+
+          {/* White Card 1 */}
+          <div className="bg-white text-gray-900 p-5 rounded-2xl w-full md:w-64 shadow-xl hover:-translate-y-2 transition-transform">
+            <div className="bg-blue-50 w-10 h-10 rounded-full flex items-center justify-center mb-4">
+              <Building2 className="w-5 h-5 text-[#306CE9]" />
+            </div>
+            <h3 className="font-bold text-lg mb-1">Room Info</h3>
+            <p className="text-gray-500 text-sm">Immediate access to emergency care. Find the nearest hospital and get urgent help.</p>
+          </div>
+
+          {/* White Card 2 */}
+          <div className="bg-white text-gray-900 p-5 rounded-2xl w-full md:w-64 shadow-xl hover:-translate-y-2 transition-transform">
+            <div className="bg-blue-50 w-10 h-10 rounded-full flex items-center justify-center mb-4">
+              <ClipboardEdit className="w-5 h-5 text-[#306CE9]" />
+            </div>
+            <h3 className="font-bold text-lg mb-1">Online Registration</h3>
+            <p className="text-gray-500 text-sm">Register easily online to book your check-ups and avoid waiting in lines.</p>
+          </div>
+
         </div>
 
       </main>
