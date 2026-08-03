@@ -73,7 +73,8 @@ export default function PatientDashboard() {
     formData.append('file', selectedFile);
 
     try {
-      const res = await fetch('http://localhost:8000/api/predict', {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
+      const res = await fetch(`${backendUrl}/api/predict`, {
         method: 'POST',
         body: formData,
       });

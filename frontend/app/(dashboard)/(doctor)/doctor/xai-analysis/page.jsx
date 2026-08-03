@@ -29,13 +29,8 @@ export default function DoctorXAIAnalysis() {
     formData.append('file', selectedFile);
 
     try {
-      const res = await fetch('https://rfqogncbqljapafesknt.supabase.co/functions/v1/predict', { // Mocking the URL, since backend might be local. We'll use local for now
-        method: 'POST',
-        body: formData,
-      });
-
-      // Wait, we need to point to the actual FastAPI backend. It was localhost:8000
-      const localRes = await fetch('http://localhost:8000/api/predict', {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
+      const localRes = await fetch(`${backendUrl}/api/predict`, {
         method: 'POST',
         body: formData,
       });
