@@ -52,6 +52,7 @@ class XAIPredictionResponse(BaseModel):
 
 # 1. Device Setup
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+torch.set_num_threads(1) # Limit memory usage for Render Free Tier
 
 # 2. Model Initialization
 # HAM10000 has 7 classes typically: ['akiec', 'bcc', 'bkl', 'df', 'mel', 'nv', 'vasc']
