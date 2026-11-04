@@ -11,8 +11,12 @@ export default function LandingPage() {
           <span className="text-xl font-bold text-gray-900 tracking-tight">DermXAI</span>
         </div>
         
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
+        <div className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
           <Link href="#" className="text-[#306CE9]">Home</Link>
+          <Link href="/test-3d" className="text-[#306CE9] font-bold hover:text-blue-700 transition-colors flex items-center gap-1.5 bg-blue-50 px-3 py-1.5 rounded-full border border-blue-200">
+            <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
+            3D Health Radar
+          </Link>
           <Link href="#" className="hover:text-gray-900 transition-colors">About Us</Link>
           <Link href="#" className="hover:text-gray-900 transition-colors">Services</Link>
           <Link href="#" className="hover:text-gray-900 transition-colors">Doctors</Link>
@@ -40,10 +44,25 @@ export default function LandingPage() {
           <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
             Seamless Hospital Booking for Your Health Needs
           </h1>
-          <p className="text-lg text-gray-500 max-w-xl mx-auto">
+          <p className="text-lg text-gray-500 max-w-xl mx-auto mb-6">
             Book appointments easily with top hospitals and trusted doctors. 
-            Get fast access to medical services and expert care.
+            Get fast access to medical services, 3D anatomical lesion radar, and expert care.
           </p>
+          <div className="flex items-center justify-center gap-4">
+            <Link
+              href="/test-3d"
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold px-8 py-3.5 rounded-full shadow-lg shadow-blue-500/30 transition-all flex items-center gap-2 transform hover:-translate-y-0.5"
+            >
+              <span>Launch 3D Health Radar</span>
+              <span>→</span>
+            </Link>
+            <Link
+              href="/register"
+              className="bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold px-6 py-3.5 rounded-full transition-all"
+            >
+              Book Doctor
+            </Link>
+          </div>
         </div>
 
         {/* Hero Image */}
