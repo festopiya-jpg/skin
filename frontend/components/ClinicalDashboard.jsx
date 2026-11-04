@@ -5,7 +5,7 @@ import {
   FileText, ShieldCheck, Share2, ArrowLeft, RefreshCw, 
   MapPin, CheckCircle2, ChevronRight, Activity, Calendar, User, 
   ExternalLink, Sparkles, AlertTriangle, AlertCircle, Info, Clock,
-  Printer, X, Check, Database, Server
+  Printer, X, Check, Database, Server, ChevronDown
 } from 'lucide-react';
 
 export default function ClinicalDashboard({
@@ -18,6 +18,7 @@ export default function ClinicalDashboard({
   const [showPdfModal, setShowPdfModal] = useState(false);
   const [showEhrModal, setShowEhrModal] = useState(false);
   const [ehrSynced, setEhrSynced] = useState(false);
+  const [showRawJson, setShowRawJson] = useState(false);
   const [reportId] = useState(() => `DX-${Math.floor(10000 + Math.random() * 90000)}`);
   const [timestamp] = useState(() => new Date().toLocaleString('en-US'));
 
@@ -426,7 +427,7 @@ export default function ClinicalDashboard({
           className="flex-1 py-3 bg-gradient-to-r from-cyan-500/20 to-blue-600/20 hover:from-cyan-500/30 hover:to-blue-600/30 border border-cyan-500/30 hover:border-cyan-500/50 rounded-xl text-xs font-bold uppercase tracking-wider text-cyan-300 transition-all duration-200 flex items-center justify-center gap-1.5"
         >
           <ExternalLink size={14} />
-          <span>Push to EHR</span>
+          <span>Save to Hospital Record</span>
         </button>
       </div>
 
@@ -557,25 +558,26 @@ export default function ClinicalDashboard({
         </div>
       )}
 
-      {/* EHR Integration / FHIR v4 Modal */}
+      {/* Hospital EHR Database Sync Modal */}
       {showEhrModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
           <div className="bg-slate-900 border border-slate-750 w-full max-w-2xl rounded-2xl p-6 sm:p-8 shadow-2xl relative text-slate-200">
             {/* Header */}
             <div className="flex items-center justify-between border-b border-slate-800 pb-4 mb-5">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-400">
+                <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">
                   <Server size={22} />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white tracking-wide">EHR / PACS INTEROPERABILITY BRIDGE</h3>
-                  <p className="text-xs text-slate-400 font-mono">HL7® FHIR® Release 4 • SMART-on-FHIR Gateway</p>
+                  <h3 className="text-lg font-bold text-white tracking-wide">Save to Hospital Clinical Database</h3>
+                  <p className="text-xs text-slate-400">Electronic Health Record (EHR) • Central Patient Archive</p>
                 </div>
               </div>
               <button
                 onClick={() => {
                   setShowEhrModal(false);
                   setEhrSynced(false);
+                  setShowRawJson(false);
                 }}
                 className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors"
               >
@@ -583,37 +585,83 @@ export default function ClinicalDashboard({
               </button>
             </div>
 
-            {/* EHR status */}
+            {/* Content Body */}
             <div className="space-y-4">
+              {/* Connection Status Bar */}
               <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2">
                   <Database size={15} className="text-cyan-400" />
-                  <span className="font-semibold text-slate-300">Target System:</span>
-                  <span className="text-slate-400 font-mono">Epic Hyperspace EHR (v2026.1)</span>
+                  <span className="font-semibold text-slate-300">Hospital Central System:</span>
+                  <span className="text-slate-400 font-mono">Hospital Main Server (Connected)</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className={`w-2 h-2 rounded-full ${ehrSynced ? 'bg-emerald-400' : 'bg-cyan-400 animate-pulse'}`} />
-                  <span className={`font-mono font-bold text-[11px] ${ehrSynced ? 'text-emerald-400' : 'text-cyan-400'}`}>
-                    {ehrSynced ? 'TRANSMITTED (201 CREATED)' : 'AUTHENTICATED'}
+                  <span className={`w-2.5 h-2.5 rounded-full ${ehrSynced ? 'bg-emerald-400' : 'bg-emerald-400 animate-pulse'}`} />
+                  <span className="font-mono font-bold text-[11px] text-emerald-400">
+                    {ehrSynced ? 'TRANSMISSION COMPLETE' : 'READY TO SYNC'}
                   </span>
                 </div>
               </div>
 
-              <div>
-                <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 block mb-1.5">
-                  FHIR v4 JSON Resource Payload (DiagnosticReport & Observation)
-                </span>
-                <pre className="p-4 rounded-xl bg-slate-950 border border-slate-850 font-mono text-[11px] text-cyan-300 max-h-56 overflow-y-auto leading-relaxed">
-                  {JSON.stringify(fhirPayload, null, 2)}
-                </pre>
+              {/* Data Summary Grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 text-xs">
+                <div>
+                  <span className="text-[10px] text-slate-500 uppercase font-mono block">Patient</span>
+                  <span className="font-bold text-white text-sm">{metadata.name}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-500 uppercase font-mono block">3D Body Region</span>
+                  <span className="font-bold text-cyan-400 text-sm">{metadata.selectedLocation}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-500 uppercase font-mono block">AI Diagnosis</span>
+                  <span className="font-bold text-white text-xs truncate block" title={dx.primaryDiagnosis}>
+                    {dx.primaryDiagnosis}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-500 uppercase font-mono block">Confidence</span>
+                  <span className="font-bold text-emerald-400 text-sm">{dx.confidence}%</span>
+                </div>
               </div>
 
-              {ehrSynced && (
-                <div className="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2.5">
-                  <CheckCircle2 size={16} className="text-emerald-400 flex-shrink-0" />
-                  <span>Observation and 3D Anatomical Location transmitted to hospital EHR with SHA-256 integrity seal.</span>
+              {/* Success Banner */}
+              {ehrSynced ? (
+                <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 text-xs flex items-start gap-3 animate-fadeIn">
+                  <CheckCircle2 size={18} className="text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <div className="space-y-1">
+                    <p className="font-bold text-emerald-200 text-sm">Successfully Synced with Hospital Record!</p>
+                    <p className="text-emerald-400/90 leading-relaxed">
+                      The patient file has been updated with the 3D anatomical tag (<strong>{metadata.selectedLocation}</strong>), AI diagnostic scan, and recommended clinical triage plan.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="p-3.5 rounded-xl bg-cyan-950/20 border border-cyan-800/40 text-slate-300 text-xs flex items-center gap-2.5">
+                  <Sparkles size={16} className="text-cyan-400 flex-shrink-0" />
+                  <span>Click <strong>&quot;Sync to Hospital Database&quot;</strong> below to securely store this diagnosis in the patient&apos;s hospital file.</span>
                 </div>
               )}
+
+              {/* Technical Details Accordion (Optional for examiners) */}
+              <div className="border border-slate-800 rounded-xl overflow-hidden bg-slate-950/40">
+                <button
+                  type="button"
+                  onClick={() => setShowRawJson(!showRawJson)}
+                  className="w-full px-4 py-2.5 flex items-center justify-between text-[11px] font-mono text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 transition-colors"
+                >
+                  <span className="flex items-center gap-2">
+                    <span>Technical Standard: HL7® FHIR® v4 Standard JSON</span>
+                  </span>
+                  <span className="text-cyan-400 text-xs font-sans">
+                    {showRawJson ? '▲ Hide Code' : '▼ Show Code for Examiners'}
+                  </span>
+                </button>
+                {showRawJson && (
+                  <pre className="p-3 border-t border-slate-800 font-mono text-[10px] text-cyan-300 max-h-48 overflow-y-auto leading-relaxed bg-slate-950">
+                    {JSON.stringify(fhirPayload, null, 2)}
+                  </pre>
+                )}
+              </div>
             </div>
 
             {/* Footer Buttons */}
@@ -622,6 +670,7 @@ export default function ClinicalDashboard({
                 onClick={() => {
                   setShowEhrModal(false);
                   setEhrSynced(false);
+                  setShowRawJson(false);
                 }}
                 className="px-4 py-2.5 rounded-xl border border-slate-700 hover:bg-slate-800 text-xs font-semibold text-slate-300 transition-colors"
               >
@@ -637,7 +686,7 @@ export default function ClinicalDashboard({
                 }`}
               >
                 {ehrSynced ? <Check size={15} /> : <Server size={15} />}
-                <span>{ehrSynced ? 'Synchronized with Epic' : 'Dispatch FHIR Bundle'}</span>
+                <span>{ehrSynced ? 'Record Synced ✓' : 'Sync to Hospital Database'}</span>
               </button>
             </div>
           </div>
