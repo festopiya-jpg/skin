@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import confetti from 'canvas-confetti';
 import BodySelector from '@/components/BodySelector';
+import ClinicalDashboard from '@/components/ClinicalDashboard';
 import { UploadCloud, ShieldAlert, FileText, CheckCircle2, UserCircle2, Clock, CalendarClock, X, Sparkles, AlertTriangle } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
@@ -23,6 +25,7 @@ export default function PatientDashboard() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState(null);
   const [selectedBodyPart, setSelectedBodyPart] = useState('Head');
+  const [showClinicalDashboard, setShowClinicalDashboard] = useState(false);
   const [showGrokModal, setShowGrokModal] = useState(false);
   
   const handleLoadDemoCase = () => {
@@ -31,6 +34,7 @@ export default function PatientDashboard() {
     const blob = new Blob([SAMPLE_LESION_IMAGE], { type: 'image/svg+xml' });
     const file = new File([blob], 'demo-melanoma-case.svg', { type: 'image/svg+xml' });
     setSelectedFile(file);
+    setShowClinicalDashboard(false);
     setResult(null);
   };
   
@@ -76,17 +80,27 @@ export default function PatientDashboard() {
       const file = e.target.files[0];
       setSelectedFile(file);
       setPreviewUrl(URL.createObjectURL(file));
+      setShowClinicalDashboard(false);
       setResult(null);
     }
   };
 
   const handleAnalyze = async () => {
-    if (!selectedFile) return;
+    if (!previewUrl && !selectedFile) return;
     setIsAnalyzing(true);
     setResult(null);
 
+    try {
+      confetti({
+        particleCount: 80,
+        spread: 60,
+        origin: { y: 0.6 },
+        colors: ['#06b6d4', '#306CE9', '#10b981'],
+      });
+    } catch (e) {}
+
     const formData = new FormData();
-    formData.append('file', selectedFile);
+    if (selectedFile) formData.append('file', selectedFile);
 
     try {
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
@@ -120,8 +134,8 @@ export default function PatientDashboard() {
       console.warn('FastAPI backend not active, running intelligent edge diagnostic simulation:', error);
       
       const simulatedData = {
-        disease: selectedBodyPart === 'Head' ? 'Atypical Melanocytic Proliferation' : 'Dysplastic Junctional Nevus',
-        severity: 'Urgent Attention Required',
+        disease: selectedBodyPart === 'Head' ? 'Atypical Melanocytic Proliferation' : 'Severely Dysplastic Junctional Nevus',
+        severity: 'Urgent Specialist Examination',
         explanation: `Computer-vision ensemble analyzed the lesion at the ${selectedBodyPart}. Features indicate structural asymmetry, uneven border pigmentation, and diameter divergence. Biopsy consultation advised.`,
         heatmap_base64: FALLBACK_HEATMAP_BASE64,
         detailed_research: `### Diagnostic Summary: ${selectedBodyPart} Cutaneous Evaluation\n\n- **Primary Classification:** Atypical Melanocytic Lesion\n- **Confidence Index:** 93.4%\n- **Recommended Triage:** Excisional biopsy with 2mm clinical margins\n- **Guidance:** Advise patient to avoid UV exposure and perform monthly dermoscopy tracking.`
@@ -145,6 +159,7 @@ export default function PatientDashboard() {
       localStorage.setItem('pending_diagnoses', JSON.stringify([diagnosisRecord, ...existing]));
     } finally {
       setIsAnalyzing(false);
+      setShowClinicalDashboard(true);
     }
   };
 
@@ -174,7 +189,28 @@ export default function PatientDashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {showClinicalDashboard ? (
+        <div className="bg-slate-950 p-4 md:p-8 rounded-3xl border border-slate-800 shadow-2xl animate-in fade-in zoom-in-95 duration-300">
+          <ClinicalDashboard
+            metadata={{
+              name: 'Eleanor Vance',
+              age: 48,
+              gender: 'Female',
+              duration: '6 weeks (asymmetrical enlargement)',
+              symptoms: 'Asymmetrical pigment border with central dark core. Mild intermittent pruritus.',
+              selectedLocation: selectedBodyPart || 'Head',
+            }}
+            imagePreview={previewUrl || SAMPLE_LESION_IMAGE}
+            onReset={() => {
+              setShowClinicalDashboard(false);
+              setResult(null);
+              setPreviewUrl(null);
+              setSelectedFile(null);
+            }}
+          />
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         {/* Left Column: AI Tool / Workflow */}
         <div className="flex flex-col gap-6">
@@ -341,6 +377,7 @@ export default function PatientDashboard() {
         </div>
 
       </div>
+      )}
 
       {/* Grok Modal */}
       {showGrokModal && result && (
