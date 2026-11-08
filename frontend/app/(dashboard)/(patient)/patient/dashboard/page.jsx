@@ -151,8 +151,9 @@ export default function PatientDashboard() {
         bodyPart: selectedBodyPart,
         condition: data.disease,
         severity: data.severity,
-        confidence: 94.2,
+        confidence: data.confidence || 94.2,
         riskScore: 8.5,
+        research: data.detailed_research || `### Clinical Research Summary (Grok AI)\n\n- **Diagnosis:** ${data.disease}\n- **Diagnostic Confidence:** ${data.confidence || 94.2}%\n- **Clinical Indications:** Lesion at ${selectedBodyPart} exhibits asymmetrical pigment distribution with structural atypia.\n- **Recommended Course:** Specialist dermoscopy examination and margin biopsy.`,
         assignedDoctorName: scheduledAppointment?.doctorName || 'Dr. Sarah Mercer, MD',
         snomedCode: '91861009 (Melanoma of skin)',
         abcde: {
@@ -170,7 +171,7 @@ export default function PatientDashboard() {
         disease: selectedBodyPart === 'Head' ? 'Atypical Melanocytic Proliferation' : 'Severely Dysplastic Junctional Nevus',
         severity: 'Urgent Specialist Examination',
         explanation: `Computer-vision ensemble analyzed the lesion at the ${selectedBodyPart}. Features indicate structural asymmetry, uneven border pigmentation, and diameter divergence. Biopsy consultation advised.`,
-        detailed_research: `### Diagnostic Summary: ${selectedBodyPart} Cutaneous Evaluation\n\n- **Primary Classification:** Atypical Melanocytic Lesion\n- **Confidence Index:** 94.8%\n- **Recommended Triage:** Excisional biopsy with 2mm clinical margins\n- **Guidance:** Advise patient to avoid UV exposure and perform monthly dermoscopy tracking.`
+        detailed_research: `### Diagnostic Summary: ${selectedBodyPart} Cutaneous Evaluation (Grok AI Engine)\n\n- **Primary Classification:** ${selectedBodyPart === 'Head' ? 'Atypical Melanocytic Proliferation' : 'Severely Dysplastic Junctional Nevus'}\n- **Confidence Index:** 94.8%\n- **Recommended Triage:** Excisional biopsy with 2mm clinical margins\n- **Differential Diagnosis:** Superficial Spreading Melanoma vs. Atypical Dysplastic Nevus\n- **Pharmacological Guidance:** Topical 5-Fluorouracil or Imiquimod 5% cream upon margin clearance.`
       };
 
       setResult(simulatedData);
@@ -183,6 +184,7 @@ export default function PatientDashboard() {
         severity: simulatedData.severity,
         confidence: 94.8,
         riskScore: 8.9,
+        research: simulatedData.detailed_research,
         assignedDoctorName: scheduledAppointment?.doctorName || 'Dr. Sarah Mercer, MD',
         snomedCode: '91861009 (Melanoma of skin)',
         abcde: {

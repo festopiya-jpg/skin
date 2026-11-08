@@ -79,7 +79,7 @@ const DEFAULT_DIAGNOSES = [
     id: 'DX-8921',
     patientName: 'Eleanor Vance',
     patientEmail: 'eleanor.vance@example.com',
-    bodyPart: 'Head',
+    bodyPart: 'Head (Temporal Scalp)',
     condition: 'Atypical Melanocytic Proliferation',
     severity: 'Urgent Specialist Examination',
     confidence: 94.8,
@@ -88,6 +88,21 @@ const DEFAULT_DIAGNOSES = [
     status: 'Pending Doctor Review',
     assignedDoctorName: 'Dr. Sarah Mercer, MD',
     snomedCode: '91861009 (Melanoma of skin)',
+    research: `### Grok AI Deep Clinical Research Dossier
+
+#### 1. Pathological Corroboration
+The trained deep convolutional network classified this lesion with **94.8% confidence** as *Atypical Melanocytic Proliferation* involving the cutaneous scalp. Cross-verification through peer-reviewed dermatopathology databases indicates an elevated risk of early invasive melanoma in-situ.
+
+#### 2. Dermoscopic Structural Indicators
+- **Asymmetry (A):** Markedly uneven distribution of melanin across both orthogonal axes.
+- **Border Scalloping (B):** Prominent abrupt cut-offs with pseudopodial extensions at the 2 o'clock periphery.
+- **Color Variegation (C):** Three-color spectrum (slate gray, dark sepia, and focal depigmentation).
+- **Diameter (D):** 7.2 mm, exceeding the classic 6 mm clinical guideline.
+
+#### 3. Recommended Interventions
+1. **Immediate Biopsy:** STAT punch biopsy of the lateral margins (Fontana-Masson stain).
+2. **Topical Therapeutics:** Initiate Imiquimod 5% cream or topical corticosteroid following margin histopathology.
+3. **Surveillance:** Comprehensive 3D whole-body photographic mapping at 3-month intervals.`,
     abcde: {
       a: 'Marked asymmetry across primary vertical axis',
       b: 'Irregular border scalloping with pigment fading',
