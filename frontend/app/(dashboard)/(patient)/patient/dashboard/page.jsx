@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import confetti from 'canvas-confetti';
 import BodySelector from '@/components/BodySelector';
 import ClinicalDashboard from '@/components/ClinicalDashboard';
 import { 
@@ -122,15 +121,6 @@ export default function PatientDashboard() {
     setIsAnalyzing(true);
     setResult(null);
 
-    try {
-      confetti({
-        particleCount: 80,
-        spread: 60,
-        origin: { y: 0.6 },
-        colors: ['#06b6d4', '#306CE9', '#10b981'],
-      });
-    } catch (e) {}
-
     const formData = new FormData();
     if (selectedFile) formData.append('file', selectedFile);
 
@@ -153,7 +143,7 @@ export default function PatientDashboard() {
         severity: data.severity,
         confidence: data.confidence || 94.2,
         riskScore: 8.5,
-        research: data.detailed_research || `### Clinical Research Summary (Grok AI)\n\n- **Diagnosis:** ${data.disease}\n- **Diagnostic Confidence:** ${data.confidence || 94.2}%\n- **Clinical Indications:** Lesion at ${selectedBodyPart} exhibits asymmetrical pigment distribution with structural atypia.\n- **Recommended Course:** Specialist dermoscopy examination and margin biopsy.`,
+        research: data.detailed_research || `### Clinical Pathology Summary\n\n- **Diagnosis:** ${data.disease}\n- **Diagnostic Confidence:** ${data.confidence || 94.2}%\n- **Clinical Indications:** Lesion at ${selectedBodyPart} exhibits asymmetrical pigment distribution with structural atypia.\n- **Recommended Course:** Specialist dermoscopy examination and margin biopsy.`,
         assignedDoctorName: scheduledAppointment?.doctorName || 'Dr. Sarah Mercer, MD',
         snomedCode: '91861009 (Melanoma of skin)',
         abcde: {
@@ -171,7 +161,7 @@ export default function PatientDashboard() {
         disease: selectedBodyPart === 'Head' ? 'Atypical Melanocytic Proliferation' : 'Severely Dysplastic Junctional Nevus',
         severity: 'Urgent Specialist Examination',
         explanation: `Computer-vision ensemble analyzed the lesion at the ${selectedBodyPart}. Features indicate structural asymmetry, uneven border pigmentation, and diameter divergence. Biopsy consultation advised.`,
-        detailed_research: `### Diagnostic Summary: ${selectedBodyPart} Cutaneous Evaluation (Grok AI Engine)\n\n- **Primary Classification:** ${selectedBodyPart === 'Head' ? 'Atypical Melanocytic Proliferation' : 'Severely Dysplastic Junctional Nevus'}\n- **Confidence Index:** 94.8%\n- **Recommended Triage:** Excisional biopsy with 2mm clinical margins\n- **Differential Diagnosis:** Superficial Spreading Melanoma vs. Atypical Dysplastic Nevus\n- **Pharmacological Guidance:** Topical 5-Fluorouracil or Imiquimod 5% cream upon margin clearance.`
+        detailed_research: `### Diagnostic Summary: ${selectedBodyPart} Cutaneous Evaluation\n\n- **Primary Classification:** ${selectedBodyPart === 'Head' ? 'Atypical Melanocytic Proliferation' : 'Severely Dysplastic Junctional Nevus'}\n- **Confidence Index:** 94.8%\n- **Recommended Triage:** Excisional biopsy with 2mm clinical margins\n- **Differential Diagnosis:** Superficial Spreading Melanoma vs. Atypical Dysplastic Nevus\n- **Pharmacological Guidance:** Topical 5-Fluorouracil or Imiquimod 5% cream upon margin clearance.`
       };
 
       setResult(simulatedData);
@@ -230,7 +220,7 @@ export default function PatientDashboard() {
       </div>
 
       {showClinicalDashboard ? (
-        <div className="bg-slate-950 p-4 md:p-8 rounded-3xl border border-slate-800 shadow-2xl animate-in fade-in zoom-in-95 duration-300">
+        <div className="bg-white p-4 md:p-8 rounded-2xl border border-gray-200 shadow-sm animate-in fade-in duration-300">
           <ClinicalDashboard
             metadata={{
               name: patientUser.name,
@@ -288,10 +278,10 @@ export default function PatientDashboard() {
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
                 <ShieldAlert className="text-[#306CE9] w-5 h-5" />
-                AI Diagnostic Tool
+                Dermoscopy Diagnostic Tool
               </h2>
-              <span className="text-xs font-bold px-2.5 py-1 bg-emerald-100 text-emerald-700 rounded-full border border-emerald-200">
-                SYSTEM ONLINE
+              <span className="text-xs font-semibold px-2.5 py-1 bg-blue-50 text-blue-700 rounded-md border border-blue-200">
+                Ready for Analysis
               </span>
             </div>
 
@@ -493,10 +483,10 @@ export default function PatientDashboard() {
           <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 max-h-[85vh] overflow-y-auto shadow-2xl relative">
             <div className="flex justify-between items-center border-b pb-3 mb-4">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-indigo-600" />
-                <h3 className="text-lg font-bold text-gray-900">Clinical Research & AI Evaluation</h3>
+                <FileText className="w-5 h-5 text-blue-600" />
+                <h3 className="text-lg font-bold text-gray-900">Clinical Pathology & Literature Summary</h3>
               </div>
-              <button onClick={() => setShowGrokModal(false)} className="p-1.5 rounded-xl hover:bg-gray-100 text-gray-400">
+              <button onClick={() => setShowGrokModal(false)} className="p-1.5 rounded-xl hover:bg-gray-100 text-gray-400 cursor-pointer">
                 <X className="w-5 h-5" />
               </button>
             </div>

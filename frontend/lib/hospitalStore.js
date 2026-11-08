@@ -88,7 +88,7 @@ const DEFAULT_DIAGNOSES = [
     status: 'Pending Doctor Review',
     assignedDoctorName: 'Dr. Sarah Mercer, MD',
     snomedCode: '91861009 (Melanoma of skin)',
-    research: `### Grok AI Deep Clinical Research Dossier
+    research: `### Clinical Pathology & Literature Research Dossier
 
 #### 1. Pathological Corroboration
 The trained deep convolutional network classified this lesion with **94.8% confidence** as *Atypical Melanocytic Proliferation* involving the cutaneous scalp. Cross-verification through peer-reviewed dermatopathology databases indicates an elevated risk of early invasive melanoma in-situ.

@@ -211,11 +211,11 @@ export default function DoctorDashboard() {
                           {patient.research && (
                             <button 
                               onClick={() => setSelectedResearch(patient.research)}
-                              className="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 px-2.5 py-1.5 rounded-lg transition-colors font-semibold flex items-center gap-1 shadow-sm"
-                              title="View Grok AI clinical deep research"
+                              className="text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 px-2.5 py-1.5 rounded-lg transition-colors font-semibold flex items-center gap-1 shadow-sm"
+                              title="View Clinical Pathology Research Dossier"
                             >
-                              <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
-                              Grok
+                              <FileText className="w-3.5 h-3.5 text-blue-600" />
+                              Pathology Dossier
                             </button>
                           )}
                           <button 
@@ -253,14 +253,14 @@ export default function DoctorDashboard() {
         </div>
       </div>
 
-      {/* Grok AI Modal Popup for Doctor */}
+      {/* Clinical Pathology Research Modal */}
       {selectedResearch && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-white w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div className="bg-gradient-to-r from-indigo-900 to-purple-900 p-5 flex justify-between items-center shrink-0">
+            <div className="bg-slate-900 p-5 flex justify-between items-center shrink-0">
               <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-amber-400" />
-                Patient Grok AI Clinical Research Report
+                <FileText className="w-5 h-5 text-blue-400" />
+                Clinical Pathology & Literature Research Dossier
               </h2>
               <button 
                 onClick={() => setSelectedResearch(null)}

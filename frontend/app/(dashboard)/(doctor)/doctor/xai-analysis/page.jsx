@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { UploadCloud, ShieldAlert, CheckCircle2, Sparkles, X } from 'lucide-react';
+import { UploadCloud, ShieldAlert, CheckCircle2, Sparkles, X, FileText } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
 export default function DoctorXAIAnalysis() {
@@ -51,7 +51,7 @@ export default function DoctorXAIAnalysis() {
     <div className="max-w-4xl mx-auto space-y-6 pb-20">
       <div>
         <h1 className="text-3xl font-bold text-gray-900">Standalone XAI Tool</h1>
-        <p className="text-gray-500 mt-1">Upload clinical images directly for instant AI analysis and Grok research.</p>
+        <p className="text-gray-500 mt-1">Upload clinical images directly for deep learning diagnosis, Grad-CAM heatmap visualization, and differential pathology review.</p>
       </div>
 
       <div className="glass-card rounded-2xl p-8 flex flex-col">
@@ -111,10 +111,10 @@ export default function DoctorXAIAnalysis() {
             
             <button
               onClick={() => setShowGrokModal(true)}
-              className="w-full mb-6 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-lg transition-all"
+              className="w-full mb-6 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
             >
-              <Sparkles className="w-5 h-5 text-amber-200" />
-              View Grok AI Detailed Analysis
+              <FileText className="w-5 h-5 text-blue-100" />
+              View Clinical Pathology Research Dossier
             </button>
 
             <div className="border-t border-gray-200/50 pt-4">
@@ -125,7 +125,7 @@ export default function DoctorXAIAnalysis() {
             <div className="mt-6 pt-4 border-t border-gray-200/50 flex justify-end">
               <button 
                 onClick={() => { setSelectedFile(null); setPreviewUrl(null); setResult(null); }}
-                className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg transition-colors"
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg transition-colors cursor-pointer"
               >
                 Start New Analysis
               </button>
@@ -134,14 +134,14 @@ export default function DoctorXAIAnalysis() {
         )}
       </div>
 
-      {/* Grok AI Modal Popup */}
+      {/* Clinical Pathology Modal Popup */}
       {showGrokModal && result?.detailed_research && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-white w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div className="bg-gradient-to-r from-indigo-900 to-purple-900 p-5 flex justify-between items-center shrink-0">
+            <div className="bg-slate-900 p-5 flex justify-between items-center shrink-0">
               <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-amber-400" />
-                Grok AI Clinical Research Report
+                <FileText className="w-5 h-5 text-blue-400" />
+                Clinical Pathology Research Dossier
               </h2>
               <button 
                 onClick={() => setShowGrokModal(false)}
