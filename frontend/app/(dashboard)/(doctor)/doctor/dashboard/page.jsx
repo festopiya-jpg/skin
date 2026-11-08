@@ -1,42 +1,45 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Users, AlertTriangle, FileCheck, Search, Sparkles, X } from 'lucide-react';
+import { Users, AlertTriangle, FileCheck, Search, Sparkles, X, MapPin, CheckCircle, Pill, Microscope } from 'lucide-react';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
+import { getDiagnoses, initHospitalStore, createPrescriptionOrder, createLabOrder } from '@/lib/hospitalStore';
 
 export default function DoctorDashboard() {
   const [patientQueue, setPatientQueue] = useState([]);
-  const [doctorProfile, setDoctorProfile] = useState({ name: 'Smith', status: 'APPROVED' });
+  const [doctorProfile, setDoctorProfile] = useState({ name: 'Dr. Sarah Mercer, MD', status: 'APPROVED' });
   const [selectedResearch, setSelectedResearch] = useState(null);
 
-  useEffect(() => {
-    // Load dynamically submitted diagnoses from Patient Dashboard via localStorage
-    const saved = localStorage.getItem('pending_diagnoses');
-    if (saved) {
-      setPatientQueue(JSON.parse(saved));
-    }
+  const loadDoctorQueue = () => {
+    initHospitalStore();
+    const queue = getDiagnoses();
+    setPatientQueue(queue);
     
     // Load session info
     const session = JSON.parse(localStorage.getItem('session_user') || '{}');
     if (session.name) {
-      // Find my status in system_doctors
       const docs = JSON.parse(localStorage.getItem('system_doctors') || '[]');
       const myProfile = docs.find(d => d.email === session.email) || {};
       setDoctorProfile({
-        name: session.name,
+        name: session.name.startsWith('Dr.') ? session.name : `Dr. ${session.name}`,
         status: myProfile.status || 'APPROVED'
       });
     }
+  };
+
+  useEffect(() => {
+    loadDoctorQueue();
   }, []);
 
   const generateReturnCode = (patient) => {
     const code = 'VISIT-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+    const pName = patient.patientName || patient.name || 'Patient';
     const newRecord = {
       id: Date.now(),
-      patientName: patient.name,
+      patientName: pName,
       condition: patient.condition,
-      doctorName: patient.assignedDoctorName || 'Smith',
+      doctorName: doctorProfile.name,
       date: new Date().toLocaleDateString(),
       returnCode: code
     };
@@ -51,17 +54,39 @@ export default function DoctorDashboard() {
   };
 
   const approveMeds = (patient) => {
-    const saved = JSON.parse(localStorage.getItem('pending_medical') || '[]');
-    localStorage.setItem('pending_medical', JSON.stringify([patient, ...saved]));
+    const pName = patient.patientName || patient.name || 'Patient';
+    createPrescriptionOrder({
+      patientName: pName,
+      doctorName: doctorProfile.name,
+      condition: patient.condition,
+      medications: [
+        { name: 'Imiquimod 5% Topical Cream', dosage: 'Apply once nightly 3x/week', quantity: '1 box' },
+        { name: 'Topical Corticosteroid 0.1%', dosage: 'Twice daily', quantity: '1 tube' }
+      ],
+      pharmacyNotes: `Prescription issued by ${doctorProfile.name} following 3D dermoscopy evaluation.`
+    });
     const code = generateReturnCode(patient);
-    alert(`Medication order sent to Pharmacy for ${patient.name}. Return code generated: ${code}`);
+    alert(`Prescription successfully routed to Hospital Pharmacy for ${pName}. Visit Return Code: ${code}`);
   };
 
   const orderLabs = (patient) => {
-    const saved = JSON.parse(localStorage.getItem('pending_lab') || '[]');
-    localStorage.setItem('pending_lab', JSON.stringify([patient, ...saved]));
+    const pName = patient.patientName || patient.name || 'Patient';
+    createLabOrder({
+      patientName: pName,
+      doctorName: doctorProfile.name,
+      testType: 'Punch Biopsy Histopathology & Fontana-Masson Stain',
+      anatomicalSite: patient.bodyPart || 'Cutaneous Lesion',
+      priority: 'STAT (High Priority)',
+      findings: `Biopsy ordered by ${doctorProfile.name} for microscopic margins check.`
+    });
     const code = generateReturnCode(patient);
-    alert(`Lab tests ordered for ${patient.name}. Return code generated: ${code}`);
+    alert(`Lab tests ordered and routed to Pathology Lab for ${pName}. Visit Return Code: ${code}`);
+  };
+
+  const signOffCase = (patient) => {
+    const pName = patient.patientName || patient.name || 'Patient';
+    const code = generateReturnCode(patient);
+    alert(`Case signed off for ${pName}. Visit Return Code: ${code}`);
   };
 
   return (
@@ -89,8 +114,8 @@ export default function DoctorDashboard() {
         <div className="glass-card p-5 rounded-xl border-l-4 border-l-sky-500">
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-gray-500 text-sm font-medium">Total Patients</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">1,248</p>
+              <p className="text-gray-500 text-sm font-medium">Pending Clinical Queue</p>
+              <p className="text-3xl font-bold text-gray-900 mt-1">{patientQueue.length}</p>
             </div>
             <Users className="text-[#306CE9]/50 w-10 h-10" />
           </div>
@@ -98,8 +123,10 @@ export default function DoctorDashboard() {
         <div className="glass-card p-5 rounded-xl border-l-4 border-l-rose-500 bg-rose-500/5">
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-gray-500 text-sm font-medium">Critical Reviews</p>
-              <p className="text-3xl font-bold text-rose-600 mt-1">2</p>
+              <p className="text-gray-500 text-sm font-medium">High Risk Lesions</p>
+              <p className="text-3xl font-bold text-rose-600 mt-1">
+                {patientQueue.filter(p => p.severity === 'Severe' || p.severity === 'High Risk' || p.risk === 'High').length}
+              </p>
             </div>
             <AlertTriangle className="text-rose-500/50 w-10 h-10" />
           </div>
@@ -107,8 +134,10 @@ export default function DoctorDashboard() {
         <div className="glass-card p-5 rounded-xl border-l-4 border-l-emerald-500">
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-gray-500 text-sm font-medium">AI Accuracy (30d)</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">94.5%</p>
+              <p className="text-gray-500 text-sm font-medium">Doctor Status</p>
+              <p className="text-2xl font-bold text-emerald-600 mt-1 flex items-center gap-1.5">
+                <CheckCircle className="w-6 h-6 inline" /> {doctorProfile.status || 'Active'}
+              </p>
             </div>
             <FileCheck className="text-emerald-500/50 w-10 h-10" />
           </div>
@@ -118,66 +147,107 @@ export default function DoctorDashboard() {
       {/* Patient Queue & Pending Reviews */}
       <div className="glass-card rounded-2xl overflow-hidden">
         <div className="p-6 border-b border-gray-200/50 flex justify-between items-center">
-          <h2 className="text-xl font-bold text-gray-900">Today's Queue & AI Insights</h2>
-          <Link href="/doctor/patients" className="text-sm text-[#306CE9] hover:text-blue-700">View All</Link>
+          <div>
+            <h2 className="text-xl font-bold text-gray-900">Today's Clinical Queue & XAI Diagnosis</h2>
+            <p className="text-xs text-gray-500 mt-0.5">Live dermoscopy evaluations ready for clinical sign-off, pharmacy prescription, or pathology lab biopsy order.</p>
+          </div>
+          <Link href="/doctor/patients" className="text-sm text-[#306CE9] hover:text-blue-700 font-semibold">View All Patients</Link>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-white/50 text-gray-500 text-sm border-b border-gray-200">
-                <th className="px-6 py-4 font-medium">Patient</th>
-                <th className="px-6 py-4 font-medium">AI Diagnosis</th>
-                <th className="px-6 py-4 font-medium">Severity</th>
-                <th className="px-6 py-4 font-medium">Appointment</th>
-                <th className="px-6 py-4 font-medium">Action</th>
+              <tr className="bg-gray-50/70 text-gray-600 text-xs uppercase tracking-wider border-b border-gray-200">
+                <th className="px-6 py-4 font-semibold">Patient</th>
+                <th className="px-6 py-4 font-semibold">AI Diagnosis</th>
+                <th className="px-6 py-4 font-semibold">3D Lesion Site</th>
+                <th className="px-6 py-4 font-semibold">Risk Level</th>
+                <th className="px-6 py-4 font-semibold">Scheduled</th>
+                <th className="px-6 py-4 font-semibold text-right">Clinical Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-700/50">
-              {patientQueue.map((patient) => (
-                <tr key={patient.id} className="hover:bg-white/30 transition-colors">
-                  <td className="px-6 py-4 font-medium text-gray-900">{patient.name}</td>
-                  <td className="px-6 py-4 text-gray-600">{patient.condition}</td>
-                  <td className="px-6 py-4">
-                    <span className={`px-2 py-1 rounded-md text-xs font-bold ${
-                      patient.severity === 'Severe' ? 'bg-rose-100 text-rose-600' : 
-                      patient.severity === 'Moderate' ? 'bg-amber-100 text-amber-600' : 
-                      'bg-emerald-100 text-emerald-600'
-                    }`}>
-                      {patient.severity}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-gray-500">{patient.time}</td>
-                  <td className="px-6 py-4">
-                    {patient.status === 'Pending Review' ? (
-                      <div className="flex flex-wrap gap-2">
-                        <button 
-                          onClick={() => setSelectedResearch(patient.research)}
-                          className="text-xs bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-3 py-1.5 rounded-lg transition-colors shadow-sm font-bold flex items-center gap-1"
-                        >
-                          <Sparkles className="w-3 h-3" />
-                          View Grok
-                        </button>
-                        <button 
-                          onClick={() => approveMeds(patient)}
-                          className="text-xs bg-[#306CE9] hover:bg-blue-600 text-white px-3 py-1.5 rounded-lg transition-colors shadow-sm font-medium"
-                        >
-                          Approve Meds
-                        </button>
-                        <button 
-                          onClick={() => orderLabs(patient)}
-                          className="text-xs bg-rose-500 hover:bg-rose-600 text-white px-3 py-1.5 rounded-lg transition-colors shadow-sm font-medium"
-                        >
-                          Order Labs
-                        </button>
-                      </div>
-                    ) : (
-                      <button className="text-xs bg-slate-700 hover:bg-gray-100 text-gray-900 px-3 py-1.5 rounded-lg transition-colors">
-                        View Record
-                      </button>
-                    )}
+            <tbody className="divide-y divide-gray-100">
+              {patientQueue.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-6 py-12 text-center text-gray-400">
+                    <CheckCircle className="w-10 h-10 mx-auto mb-2 text-emerald-500/40" />
+                    <p className="font-medium text-gray-600">All patient evaluations currently signed off and cleared.</p>
+                    <p className="text-xs mt-1">New AI scans from patients will appear here automatically.</p>
                   </td>
                 </tr>
-              ))}
+              ) : (
+                patientQueue.map((patient) => {
+                  const patientName = patient.patientName || patient.name || 'Patient';
+                  const isSevere = patient.severity === 'Severe' || patient.severity === 'High Risk' || patient.risk === 'High';
+                  return (
+                    <tr key={patient.id} className="hover:bg-blue-50/30 transition-colors">
+                      <td className="px-6 py-4">
+                        <div className="font-bold text-gray-900">{patientName}</div>
+                        <div className="text-xs text-gray-400 font-mono">PID-{String(patient.id).slice(-4)}</div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="font-semibold text-gray-800">{patient.condition}</div>
+                        {patient.confidence && (
+                          <div className="text-xs text-blue-600 font-medium">Confidence: {patient.confidence}</div>
+                        )}
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-md bg-indigo-50 text-indigo-700 font-semibold border border-indigo-100">
+                          <MapPin className="w-3 h-3 text-indigo-500" />
+                          {patient.bodyPart || 'Torso / Trunk'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
+                          isSevere ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'
+                        }`}>
+                          {patient.severity || 'Moderate'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-xs text-gray-500 font-medium">
+                        {patient.time || patient.date || 'Today'}
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex flex-wrap items-center justify-end gap-2">
+                          {patient.research && (
+                            <button 
+                              onClick={() => setSelectedResearch(patient.research)}
+                              className="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 px-2.5 py-1.5 rounded-lg transition-colors font-semibold flex items-center gap-1 shadow-sm"
+                              title="View Grok AI clinical deep research"
+                            >
+                              <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+                              Grok
+                            </button>
+                          )}
+                          <button 
+                            onClick={() => approveMeds(patient)}
+                            className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-2.5 py-1.5 rounded-lg transition-colors shadow-sm font-semibold flex items-center gap-1"
+                            title="Route e-prescription to Hospital Pharmacy"
+                          >
+                            <Pill className="w-3.5 h-3.5" />
+                            Rx Meds
+                          </button>
+                          <button 
+                            onClick={() => orderLabs(patient)}
+                            className="text-xs bg-rose-600 hover:bg-rose-700 text-white px-2.5 py-1.5 rounded-lg transition-colors shadow-sm font-semibold flex items-center gap-1"
+                            title="Order Histopathology punch biopsy from Lab"
+                          >
+                            <Microscope className="w-3.5 h-3.5" />
+                            Order Lab
+                          </button>
+                          <button 
+                            onClick={() => signOffCase(patient)}
+                            className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1.5 rounded-lg transition-colors shadow-sm font-semibold flex items-center gap-1"
+                            title="Sign-off and complete consultation"
+                          >
+                            <CheckCircle className="w-3.5 h-3.5" />
+                            Sign Off
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>

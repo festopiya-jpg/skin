@@ -645,7 +645,7 @@ export default function ClinicalDashboard({
                 </div>
               )}
 
-              {/* Technical Details Accordion (Optional for examiners) */}
+              {/* Technical Details Accordion (HL7 FHIR Interoperability Payload) */}
               <div className="border border-slate-800 rounded-xl overflow-hidden bg-slate-950/40">
                 <button
                   type="button"
@@ -656,7 +656,7 @@ export default function ClinicalDashboard({
                     <span>Technical Standard: HL7® FHIR® v4 Standard JSON</span>
                   </span>
                   <span className="text-cyan-400 text-xs font-sans">
-                    {showRawJson ? '▲ Hide Code' : '▼ Show Code for Examiners'}
+                    {showRawJson ? '▲ Hide FHIR JSON' : '▼ View Interoperability FHIR Payload'}
                   </span>
                 </button>
                 {showRawJson && (

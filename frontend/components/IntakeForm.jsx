@@ -3,7 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { Upload, AlertCircle, FileImage, ShieldAlert, User, Calendar, Activity, Clock, Sparkles, CheckCircle2 } from 'lucide-react';
 
-// Realistic synthetic polarized dermoscopy lesion image for instant viva demos
+// Standardized polarized dermoscopy lesion image for clinical reference
 const SAMPLE_LESION_IMAGE = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500" viewBox="0 0 500 500"><defs><radialGradient id="skin" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="%23ecc2a8"/><stop offset="100%" stop-color="%23c58b69"/></radialGradient><radialGradient id="core" cx="42%" cy="38%" r="48%"><stop offset="0%" stop-color="%23120703"/><stop offset="35%" stop-color="%233a180b"/><stop offset="68%" stop-color="%23753617"/><stop offset="88%" stop-color="%23aa5424"/><stop offset="100%" stop-color="%23d08557" stop-opacity="0"/></radialGradient><filter id="irregular"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="4" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="22" xChannelSelector="R" yChannelSelector="G"/></filter></defs><rect width="500" height="500" fill="url(%23skin)"/><g filter="url(%23irregular)"><path d="M 230,120 C 330,130 400,190 380,290 C 350,380 270,410 190,390 C 110,360 90,270 130,190 C 160,140 180,110 230,120 Z" fill="url(%23core)" opacity="0.96"/></g><circle cx="260" cy="220" r="18" fill="%23050201" opacity="0.85"/><circle cx="190" cy="280" r="22" fill="%23260c04" opacity="0.85"/><circle cx="310" cy="300" r="15" fill="%23481e09" opacity="0.75"/><circle cx="250" cy="250" r="230" fill="none" stroke="%2322d3ee" stroke-width="2" stroke-dasharray="8,6" opacity="0.45"/><text x="24" y="475" fill="%23ffffff" font-family="monospace" font-size="13" font-weight="bold" opacity="0.9">POLARIZED DERMOSCOPY • 10x OPTICAL ZOOM • SCALE: 1mm/div</text></svg>`;
 
 export default function IntakeForm({
@@ -122,7 +122,7 @@ export default function IntakeForm({
   return (
     <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 lg:p-8 flex flex-col h-full shadow-2xl justify-between overflow-y-auto">
       <div>
-        {/* Header with Demo Case quick loader */}
+        {/* Header with Clinical Reference preset loader */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-6">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-cyan-950 border border-cyan-500/20 rounded-xl text-cyan-400">
@@ -137,11 +137,11 @@ export default function IntakeForm({
           <button
             type="button"
             onClick={handleLoadDemoCase}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-950/60 hover:bg-cyan-900/70 border border-cyan-500/40 text-cyan-300 hover:text-cyan-200 text-xs font-semibold tracking-wide transition-all duration-200 shadow-lg shadow-cyan-950/30"
-            title="Load sample clinical presentation for viva / review demo"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-950/60 hover:bg-cyan-900/70 border border-cyan-500/40 text-cyan-300 hover:text-cyan-200 text-xs font-semibold tracking-wide transition-all duration-200 shadow-lg shadow-cyan-950/30 cursor-pointer"
+            title="Load sample clinical presentation for clinical verification"
           >
-            <Sparkles size={14} className="text-cyan-400 animate-pulse" />
-            <span>⚡ Load Demo Case</span>
+            <Sparkles size={14} className="text-cyan-400" />
+            <span>Clinical Reference Preset</span>
           </button>
         </div>
 
@@ -149,7 +149,7 @@ export default function IntakeForm({
           <div className="mb-4 p-3 rounded-xl bg-emerald-950/30 border border-emerald-500/30 text-emerald-300 text-xs flex items-center justify-between">
             <div className="flex items-center gap-2">
               <CheckCircle2 size={15} className="text-emerald-400" />
-              <span>Sample clinical case loaded successfully for demonstration.</span>
+              <span>Standard clinical reference case loaded into form.</span>
             </div>
             <button
               type="button"

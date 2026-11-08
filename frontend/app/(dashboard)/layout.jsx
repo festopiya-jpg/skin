@@ -25,26 +25,39 @@ export default function DashboardLayout({ children }) {
   let role = 'patient';
   if (pathname.includes('/doctor/')) role = 'doctor';
   if (pathname.includes('/admin/')) role = 'admin';
+  if (pathname.includes('/medical/')) role = 'medical';
+  if (pathname.includes('/lab/')) role = 'lab';
 
   const getLinks = () => {
     switch (role) {
       case 'doctor':
         return [
-          { name: 'Dashboard', href: '/doctor/dashboard', icon: LayoutDashboard },
+          { name: 'Clinical Dashboard', href: '/doctor/dashboard', icon: LayoutDashboard },
           { name: 'Patient Queue', href: '/doctor/patients', icon: Users },
-          { name: 'XAI Analysis', href: '/doctor/xai-analysis', icon: Microscope },
-          { name: 'Schedule', href: '#', icon: Calendar },
+          { name: 'XAI Lesion Analysis', href: '/doctor/xai-analysis', icon: Microscope },
+          { name: '3D Health Radar', href: '/test-3d', icon: Activity },
         ];
       case 'admin':
         return [
-          { name: 'Overview', href: '/admin/dashboard', icon: LayoutDashboard },
-          { name: 'Manage Users', href: '/admin/users', icon: Users },
-          { name: 'System Logs', href: '#', icon: FileText },
-          { name: 'Settings', href: '#', icon: Settings },
+          { name: 'Admin Overview', href: '/admin/dashboard', icon: LayoutDashboard },
+          { name: 'Manage Staff & Users', href: '/admin/users', icon: Users },
+          { name: 'Clinical Pharmacy Desk', href: '/medical/dashboard', icon: FileText },
+          { name: 'Pathology Lab Desk', href: '/lab/dashboard', icon: Microscope },
+        ];
+      case 'medical':
+        return [
+          { name: 'Pharmacy Queue', href: '/medical/dashboard', icon: LayoutDashboard },
+          { name: 'Patient Records', href: '/patient/records', icon: FileText },
+        ];
+      case 'lab':
+        return [
+          { name: 'Pathology Lab Orders', href: '/lab/dashboard', icon: Microscope },
+          { name: 'Biopsy Registry', href: '/patient/records', icon: FileText },
         ];
       default: // patient
         return [
-          { name: 'My Dashboard', href: '/patient/dashboard', icon: LayoutDashboard },
+          { name: 'My Diagnostic Portal', href: '/patient/dashboard', icon: LayoutDashboard },
+          { name: '3D Health Radar', href: '/test-3d', icon: Activity },
           { name: 'Appointments', href: '/patient/appointments', icon: Calendar },
           { name: 'Medical Records', href: '/patient/records', icon: FileText },
         ];

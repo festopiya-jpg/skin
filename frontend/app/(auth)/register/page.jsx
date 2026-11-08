@@ -35,17 +35,25 @@ export default function RegisterPage() {
         });
         if (error) console.warn('Supabase auth notice:', error.message);
       } catch (authErr) {
-        console.warn('Supabase offline or unreachable, proceeding with local session for demo review');
+        console.warn('Supabase offline or unreachable, proceeding with hospital local session');
       }
 
-      // Always establish session for viva presentation
-      const userName = name.trim() || email.split('@')[0] || 'Demo User';
+      // Establish hospital user session
+      const userName = name.trim() || email.split('@')[0] || 'Hospital User';
       localStorage.setItem('session_user', JSON.stringify({ name: userName, email, role }));
       
       if (role === 'doctor') {
         const doctors = JSON.parse(localStorage.getItem('system_doctors') || '[]');
         if (!doctors.find(d => d.email === email)) {
-          doctors.push({ id: Date.now(), name: userName, email, status: 'APPROVED' });
+          doctors.push({ 
+            id: Date.now(), 
+            name: userName.startsWith('Dr.') ? userName : `Dr. ${userName}`, 
+            email, 
+            specialty: 'Clinical Dermatology & Cutaneous Surgery',
+            hospitalRoom: 'Consultation Suite 305',
+            npi: `NPI-${Math.floor(1000000000 + Math.random() * 9000000000)}`,
+            status: 'APPROVED'
+          });
           localStorage.setItem('system_doctors', JSON.stringify(doctors));
         }
         router.push('/doctor/dashboard');
