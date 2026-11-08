@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Users, AlertTriangle, FileCheck, Search, Sparkles, X, MapPin, CheckCircle, Pill, Microscope } from 'lucide-react';
+import { Users, AlertTriangle, FileCheck, Search, Sparkles, X, MapPin, CheckCircle, Pill, Microscope, FileText } from 'lucide-react';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import { getDiagnoses, initHospitalStore, createPrescriptionOrder, createLabOrder } from '@/lib/hospitalStore';

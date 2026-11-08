@@ -48,6 +48,16 @@ export default function RegisterPage() {
       const userName = name.trim() || email.split('@')[0] || 'Hospital User';
       localStorage.setItem('session_user', JSON.stringify({ name: userName, email, role: effectiveRole }));
       
+      // Save registered credentials for future logins
+      const hospitalUsers = JSON.parse(localStorage.getItem('hospital_users') || '[]');
+      const existingIdx = hospitalUsers.findIndex(u => u.email === cleanEmail);
+      if (existingIdx >= 0) {
+        hospitalUsers[existingIdx] = { email: cleanEmail, password, name: userName, role: effectiveRole };
+      } else {
+        hospitalUsers.push({ email: cleanEmail, password, name: userName, role: effectiveRole });
+      }
+      localStorage.setItem('hospital_users', JSON.stringify(hospitalUsers));
+      
       if (effectiveRole === 'admin') {
         router.push('/admin/dashboard');
       }
