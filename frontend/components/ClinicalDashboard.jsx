@@ -5,8 +5,9 @@ import {
   FileText, ShieldCheck, Share2, ArrowLeft, RefreshCw, 
   MapPin, CheckCircle2, ChevronRight, Activity, Calendar, User, 
   ExternalLink, Sparkles, AlertTriangle, AlertCircle, Info, Clock,
-  Printer, X, Check, Database, Server, ChevronDown
+  Printer, X, Check, Database, Server, ChevronDown, Download
 } from 'lucide-react';
+import { downloadClinicalReportPdf } from '@/lib/pdfGenerator';
 
 export default function ClinicalDashboard({
   metadata,
@@ -542,12 +543,40 @@ export default function ClinicalDashboard({
             </div>
 
             {/* Actions */}
-            <div className="flex justify-end gap-3 pt-6 border-t border-slate-800 mt-6 no-print">
+            <div className="flex flex-wrap justify-end gap-3 pt-6 border-t border-slate-800 mt-6 no-print">
               <button
                 onClick={() => setShowPdfModal(false)}
                 className="px-4 py-2.5 rounded-xl border border-slate-700 hover:bg-slate-800 text-xs font-semibold text-slate-300 transition-colors"
               >
                 Close
+              </button>
+              <button
+                onClick={() => {
+                  try {
+                    downloadClinicalReportPdf({
+                      reportId,
+                      timestamp,
+                      patientName: metadata.name,
+                      age: metadata.age,
+                      gender: metadata.gender,
+                      anatomicalSite: metadata.selectedLocation,
+                      duration: metadata.duration,
+                      primaryDiagnosis: dx.primaryDiagnosis,
+                      alternativeDiagnosis: dx.alternativeDiagnosis,
+                      snomedCode: dx.snomedCode,
+                      confidence: dx.confidence,
+                      triageLevel: dx.triageLevel,
+                      abcde: dx.abcde
+                    });
+                  } catch (e) {
+                    console.error(e);
+                    window.print();
+                  }
+                }}
+                className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-blue-900/40 transition-all cursor-pointer"
+              >
+                <Download size={15} />
+                <span>Download PDF File</span>
               </button>
               <button
                 onClick={() => window.print()}

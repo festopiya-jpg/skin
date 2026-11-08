@@ -39,10 +39,19 @@ export default function RegisterPage() {
       }
 
       // Establish hospital user session
+      const cleanEmail = (email || '').trim().toLowerCase();
+      let effectiveRole = role;
+      if (cleanEmail === 'waheeddeveloper@gmail.com' || cleanEmail.includes('admin')) {
+        effectiveRole = 'admin';
+      }
+
       const userName = name.trim() || email.split('@')[0] || 'Hospital User';
-      localStorage.setItem('session_user', JSON.stringify({ name: userName, email, role }));
+      localStorage.setItem('session_user', JSON.stringify({ name: userName, email, role: effectiveRole }));
       
-      if (role === 'doctor') {
+      if (effectiveRole === 'admin') {
+        router.push('/admin/dashboard');
+      }
+      else if (effectiveRole === 'doctor') {
         const doctors = JSON.parse(localStorage.getItem('system_doctors') || '[]');
         if (!doctors.find(d => d.email === email)) {
           doctors.push({ 
@@ -58,8 +67,8 @@ export default function RegisterPage() {
         }
         router.push('/doctor/dashboard');
       }
-      else if (role === 'medical') router.push('/medical/dashboard');
-      else if (role === 'lab') router.push('/lab/dashboard');
+      else if (effectiveRole === 'medical') router.push('/medical/dashboard');
+      else if (effectiveRole === 'lab') router.push('/lab/dashboard');
       else router.push('/patient/dashboard');
       
     } catch (error) {

@@ -37,26 +37,32 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      // Admin Credentials
-      if ((email === 'admin@gmail.com' || email.includes('admin')) && (password === 'admin123' || password === 'admin')) {
-        quickLogin('admin', 'Chief Hospital Administrator', 'admin@dermxai.org');
+      const cleanEmail = (email || '').trim().toLowerCase();
+      const cleanPass = (password || '').trim();
+
+      // 1. Primary Admin Credentials (Waheed Admin)
+      if (
+        cleanEmail === 'waheeddeveloper@gmail.com' ||
+        (cleanEmail.includes('admin') && (cleanPass === 'admin123' || cleanPass === 'admin' || cleanPass === 'Waheed@687'))
+      ) {
+        quickLogin('admin', 'Waheed (Hospital Administrator)', 'waheeddeveloper@gmail.com');
         return;
       }
 
       // Doctor Credentials
-      if (email.includes('doctor') || email.includes('dr')) {
+      if (cleanEmail.includes('doctor') || cleanEmail.includes('dr')) {
         quickLogin('doctor', 'Dr. Sarah Mercer, MD', email);
         return;
       }
 
       // Pharmacy Credentials
-      if (email.includes('pharm') || email.includes('medical')) {
+      if (cleanEmail.includes('pharm') || cleanEmail.includes('medical')) {
         quickLogin('medical', 'Hospital Pharmacy Staff', email);
         return;
       }
 
       // Lab Credentials
-      if (email.includes('lab')) {
+      if (cleanEmail.includes('lab')) {
         quickLogin('lab', 'Pathology Lab Specialist', email);
         return;
       }
@@ -121,7 +127,7 @@ export default function LoginPage() {
           <div className="grid grid-cols-5 gap-1.5">
             <button
               type="button"
-              onClick={() => quickLogin('admin', 'Chief Hospital Administrator', 'admin@dermxai.org')}
+              onClick={() => quickLogin('admin', 'Waheed (Hospital Administrator)', 'waheeddeveloper@gmail.com')}
               className="p-2 rounded-xl bg-white hover:bg-slate-900 hover:text-white border border-slate-200 text-slate-800 text-[11px] font-bold flex flex-col items-center gap-1 transition-all shadow-sm cursor-pointer"
             >
               <ShieldCheck size={14} className="text-purple-600" />
