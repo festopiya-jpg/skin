@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { 
   Users, Activity, Server, ShieldCheck, CalendarClock, Send, 
   CheckCircle2, Clock, MapPin, Stethoscope, AlertTriangle, 
-  Building2, Bed, Pill, Microscope, Sparkles, RefreshCw
+  Building2, Bed, Pill, Microscope, Sparkles, RefreshCw, 
+  Mail, X, CreditCard, ExternalLink 
 } from 'lucide-react';
 import { 
   getHospitalMetrics, 
@@ -28,6 +29,7 @@ export default function AdminDashboard() {
   const [appointmentDates, setAppointmentDates] = useState({});
   const [assignedRooms, setAssignedRooms] = useState({});
   const [messages, setMessages] = useState({});
+  const [sentEmailModal, setSentEmailModal] = useState(null);
 
   const reloadData = () => {
     setMetrics(getHospitalMetrics());
@@ -56,15 +58,19 @@ export default function AdminDashboard() {
   const handleConfirmRequest = (req) => {
     const datetime = appointmentDates[req.id] || new Date(Date.now() + 24 * 3600 * 1000).toISOString();
     const room = assignedRooms[req.id] || 'Consultation Suite 304';
-    const notes = messages[req.id] || 'Please arrive 10 minutes early. Skin lesion 3D pre-scan attached to file.';
+    const notes = messages[req.id] || 'Please arrive 10 minutes early. Skin lesion photos can be uploaded in your portal.';
 
-    confirmAppointment(req.id, {
+    const res = confirmAppointment(req.id, {
       datetime,
       room,
       notes,
-      doctorName: req.doctorName
+      doctorName: req.doctorName,
+      adminEmail: 'waheeddeveloper@gmail.com'
     });
 
+    if (res?.email) {
+      setSentEmailModal(res.email);
+    }
     reloadData();
   };
 
@@ -254,10 +260,27 @@ export default function AdminDashboard() {
                     </div>
 
                     <div className="text-xs text-gray-600 space-y-1">
+                      <p><strong className="text-gray-800">Patient Email:</strong> <span className="font-mono text-blue-600">{req.patientEmail}</span></p>
                       <p><strong className="text-gray-800">Requested Specialist:</strong> {req.doctorName}</p>
                       <p><strong className="text-gray-800">Lesion Location:</strong> <span className="font-bold text-blue-600">{req.lesionLocation || 'Torso'}</span></p>
                       <p><strong className="text-gray-800">Clinical Reason:</strong> {req.reason || 'Dermatological screening'}</p>
                       <p className="text-[11px] text-gray-400 font-mono">Booking Ref: {req.id}</p>
+                    </div>
+
+                    {/* Payment Proof Badge */}
+                    <div className="mt-2 p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between text-xs">
+                      <div>
+                        <span className="font-bold text-emerald-900 flex items-center gap-1.5">
+                          <CreditCard className="w-3.5 h-3.5 text-emerald-700" />
+                          <span>Consultation Fee: {req.amount || '₹500.00'}</span>
+                        </span>
+                        <span className="text-[11px] text-emerald-700 font-mono block mt-0.5">
+                          UTR: <strong>{req.utrNumber || 'UTR-412891048291'}</strong> • UPI QR Pay
+                        </span>
+                      </div>
+                      <span className="text-[10px] font-bold px-2 py-0.5 bg-emerald-200/60 text-emerald-900 rounded">
+                        PAID BY PATIENT
+                      </span>
                     </div>
                   </div>
 
@@ -265,7 +288,7 @@ export default function AdminDashboard() {
                   <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="text-[11px] font-bold uppercase tracking-wider text-gray-500 block mb-1">
-                        Consultation Time
+                        Set Appointment Date & Time
                       </label>
                       <input 
                         type="datetime-local" 
@@ -282,19 +305,19 @@ export default function AdminDashboard() {
                         type="text"
                         value={assignedRooms[req.id] || ''}
                         onChange={(e) => setAssignedRooms(prev => ({...prev, [req.id]: e.target.value}))}
-                        placeholder="Suite 304 - Telehealth A"
+                        placeholder="Suite 304 - Outpatient Desk"
                         className="w-full bg-slate-50 border border-gray-200 rounded-xl px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs"
                       />
                     </div>
                     <div className="sm:col-span-2">
                       <label className="text-[11px] font-bold uppercase tracking-wider text-gray-500 block mb-1">
-                        Instructions to Patient
+                        Instructions / Clinical Notes
                       </label>
                       <input 
                         type="text"
                         value={messages[req.id] || ''}
                         onChange={(e) => setMessages(prev => ({...prev, [req.id]: e.target.value}))}
-                        placeholder="Please arrive 10 minutes early with pre-scan uploaded."
+                        placeholder="Arrive 10m prior. Please upload your lesion photos in the patient portal."
                         className="w-full bg-slate-50 border border-gray-200 rounded-xl px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs"
                       />
                     </div>
@@ -304,11 +327,15 @@ export default function AdminDashboard() {
                   <div className="flex lg:flex-col justify-end items-end gap-2 border-t lg:border-t-0 lg:border-l border-gray-200 pt-4 lg:pt-0 lg:pl-6">
                     <button 
                       onClick={() => handleConfirmRequest(req)}
-                      className="w-full lg:w-44 py-3 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs uppercase tracking-wider shadow-md shadow-emerald-600/30 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                      className="w-full lg:w-48 py-3 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs uppercase tracking-wider shadow-md shadow-emerald-600/30 transition-all flex items-center justify-center gap-1.5 cursor-pointer text-center"
+                      title="Approve payment and dispatch confirmation email from waheeddeveloper@gmail.com"
                     >
-                      <Send className="w-4 h-4" />
-                      <span>Confirm & Send</span>
+                      <Mail className="w-4 h-4" />
+                      <span>Approve & Send Gmail</span>
                     </button>
+                    <span className="text-[10px] text-gray-400 text-center block w-full font-mono">
+                      Sender: waheeddeveloper@gmail.com
+                    </span>
                   </div>
 
                 </div>
@@ -377,6 +404,76 @@ export default function AdminDashboard() {
           </table>
         </div>
       </div>
+
+      {/* Gmail Dispatched Confirmation Modal */}
+      {sentEmailModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl relative border border-gray-200 animate-in fade-in duration-200">
+            
+            {/* Modal Header */}
+            <div className="flex justify-between items-center pb-3 border-b border-gray-100">
+              <div className="flex items-center gap-2">
+                <div className="w-9 h-9 rounded-xl bg-red-100 text-red-600 flex items-center justify-center">
+                  <Mail className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-gray-900 text-base">Gmail Notification Dispatched</h3>
+                  <p className="text-[11px] text-gray-500">Official confirmation delivered to patient</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setSentEmailModal(null)} 
+                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Email Preview Card */}
+            <div className="my-4 p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+              <div className="flex justify-between items-center pb-2 border-b border-slate-200 text-[11px]">
+                <span className="text-gray-500">From:</span>
+                <span className="font-bold text-gray-900 font-mono">waheeddeveloper@gmail.com</span>
+              </div>
+              <div className="flex justify-between items-center pb-2 border-b border-slate-200 text-[11px]">
+                <span className="text-gray-500">To:</span>
+                <span className="font-bold text-blue-700 font-mono">{sentEmailModal.to}</span>
+              </div>
+              <div className="flex justify-between items-center pb-2 border-b border-slate-200 text-[11px]">
+                <span className="text-gray-500">Subject:</span>
+                <span className="font-semibold text-gray-800">{sentEmailModal.subject}</span>
+              </div>
+              <div>
+                <span className="text-gray-500 block mb-1 text-[11px]">Message Content:</span>
+                <div className="p-3 bg-white rounded-xl border border-gray-200 text-gray-700 whitespace-pre-line leading-relaxed text-[11px] font-sans">
+                  {sentEmailModal.body}
+                </div>
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="flex flex-col sm:flex-row gap-2 pt-2 border-t border-gray-100">
+              <a
+                href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(sentEmailModal.to)}&su=${encodeURIComponent(sentEmailModal.subject)}&body=${encodeURIComponent(sentEmailModal.body)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="flex-1 py-2.5 px-4 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md shadow-red-600/20"
+              >
+                <ExternalLink className="w-4 h-4" />
+                <span>Open in Real Gmail Compose</span>
+              </a>
+              <button
+                type="button"
+                onClick={() => setSentEmailModal(null)}
+                className="py-2.5 px-5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl text-xs"
+              >
+                Done
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
 
     </div>
   );

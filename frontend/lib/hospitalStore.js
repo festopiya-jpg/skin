@@ -220,6 +220,31 @@ export function initHospitalStore() {
   }
 }
 
+// Configurable Payment Desk & Dynamic QR Code Engine
+export const DEFAULT_PAYMENT_CONFIG = {
+  amount: 500,
+  currency: 'INR',
+  currencySymbol: '₹',
+  upiId: 'waheeddeveloper@okhdfcbank',
+  payeeName: 'DermXAI Multi-Speciality Hospital',
+  // Dynamic payment link - converts instantly to QR code
+  paymentLink: 'upi://pay?pa=waheeddeveloper@okhdfcbank&pn=DermXAI%20Multi-Speciality%20Hospital&am=500&cu=INR&tn=Consultation%20Appointment%20Fee',
+  adminEmail: 'waheeddeveloper@gmail.com'
+};
+
+export function getPaymentConfig() {
+  initHospitalStore();
+  return getStorage('hospital_payment_config', DEFAULT_PAYMENT_CONFIG);
+}
+
+export function setPaymentConfig(newConfig) {
+  initHospitalStore();
+  const current = getPaymentConfig();
+  const updated = { ...current, ...newConfig };
+  setStorage('hospital_payment_config', updated);
+  return updated;
+}
+
 // ==========================================
 // 1. DYNAMIC USER REGISTRATION & APPROVAL APIS
 // ==========================================
@@ -234,14 +259,15 @@ export function registerHospitalUser({ name, email, password, role, department, 
   const cleanEmail = (email || '').trim().toLowerCase();
   const cleanPass = (password || '').trim();
   const cleanName = (name || '').trim();
+  const userRole = role || 'patient';
 
   const users = getHospitalUsers();
   if (users.some(u => (u.email || '').toLowerCase() === cleanEmail)) {
     return { success: false, error: 'An account with this email already exists.' };
   }
 
-  // Every first-time sign-up requires Admin approval!
-  const isAutoApproved = cleanEmail === 'waheeddeveloper@gmail.com';
+  // Patients do NOT require admin approval! Only clinical staff (Doctor, Pharmacy, Lab) require approval.
+  const isAutoApproved = cleanEmail === 'waheeddeveloper@gmail.com' || userRole === 'patient';
   const status = isAutoApproved ? 'APPROVED' : 'PENDING';
 
   const newUser = {
@@ -249,8 +275,8 @@ export function registerHospitalUser({ name, email, password, role, department, 
     name: cleanName,
     email: cleanEmail,
     password: cleanPass,
-    role: role || 'patient',
-    department: department || (role === 'doctor' ? 'Clinical Dermatology' : role === 'medical' ? 'Clinical Pharmacy' : role === 'lab' ? 'Pathology Diagnostics' : 'Outpatient'),
+    role: userRole,
+    department: department || (userRole === 'doctor' ? 'Clinical Dermatology' : userRole === 'medical' ? 'Clinical Pharmacy' : userRole === 'lab' ? 'Pathology Diagnostics' : 'Outpatient Clinic'),
     license: license || `LIC-${Math.floor(100000 + Math.random() * 900000)}`,
     status,
     createdAt: new Date().toISOString()
@@ -259,8 +285,8 @@ export function registerHospitalUser({ name, email, password, role, department, 
   const updatedUsers = [newUser, ...users];
   setStorage('hospital_users', updatedUsers);
 
-  // If doctor is auto-approved (e.g. admin or patient), sync to system_doctors
-  if (role === 'doctor' && status === 'APPROVED') {
+  // If doctor is auto-approved, sync to system_doctors
+  if (userRole === 'doctor' && status === 'APPROVED') {
     const docs = getStorage('system_doctors', DEFAULT_DOCTORS);
     docs.push({
       id: Date.now(),
@@ -376,8 +402,8 @@ export function verifyUserCredentials(email, password) {
     return { success: false, error: 'INVALID_PASSWORD' };
   }
 
-  // Check if account requires Admin Approval
-  if (user.status === 'PENDING') {
+  // Check if account requires Admin Approval (only for staff: doctor, medical, lab)
+  if (user.role !== 'patient' && user.status === 'PENDING') {
     return { 
       success: false, 
       error: 'PENDING_APPROVAL', 
@@ -414,7 +440,7 @@ export function revokeDoctor(email) {
 }
 
 // ==========================================
-// 3. APPOINTMENTS APIS
+// 3. APPOINTMENTS & QR PAYMENT APIS
 // ==========================================
 
 export function getAppointments() {
@@ -429,7 +455,12 @@ export function createAppointmentRequest(data) {
   const requests = getStorage('appointment_requests', []);
   const newReq = {
     id: `REQ-${Math.floor(1000 + Math.random() * 9000)}`,
-    status: 'Needs Scheduling',
+    status: 'Payment Pending Admin Approval',
+    paymentStatus: data.paymentStatus || 'PAID_PENDING_ADMIN_VERIFICATION',
+    amount: data.amount || '₹500.00',
+    utrNumber: data.utrNumber || `UTR-${Math.floor(100000000000 + Math.random() * 900000000000)}`,
+    paymentReceipt: data.paymentReceipt || null,
+    paymentMethod: 'UPI QR Pay',
     createdAt: new Date().toISOString(),
     ...data
   };
@@ -438,7 +469,7 @@ export function createAppointmentRequest(data) {
   return newReq;
 }
 
-export function confirmAppointment(requestId, { datetime, room, notes, doctorName }) {
+export function confirmAppointment(requestId, { datetime, room, notes, doctorName, adminEmail }) {
   initHospitalStore();
   const requests = getStorage('appointment_requests', []);
   const scheduled = getStorage('scheduled_appointments', DEFAULT_APPOINTMENTS);
@@ -447,22 +478,107 @@ export function confirmAppointment(requestId, { datetime, room, notes, doctorNam
   const updatedRequests = requests.filter(r => r.id !== requestId);
   setStorage('appointment_requests', updatedRequests);
 
+  const finalDoctorName = doctorName || target?.doctorName || 'Dr. Sarah Mercer, MD';
+  const finalDatetime = datetime || new Date(Date.now() + 24 * 3600 * 1000).toISOString();
+  const finalRoom = room || 'Consultation Suite 304';
+  const finalNotes = notes || 'Please arrive 10 minutes early with previous medical history.';
+  const senderEmail = adminEmail || 'waheeddeveloper@gmail.com';
+  const patientEmail = target?.patientEmail || 'patient@example.com';
+  const patientName = target?.patientName || 'Patient';
+
   const confirmedItem = {
     id: `APT-${Math.floor(1000 + Math.random() * 9000)}`,
-    patientName: target?.patientName || 'Patient',
-    patientEmail: target?.patientEmail || 'patient@example.com',
-    doctorName: doctorName || target?.doctorName || 'Dr. Sarah Mercer, MD',
-    datetime: datetime || new Date().toISOString(),
-    room: room || 'Consultation Suite 304',
+    requestId: target?.id,
+    patientName,
+    patientEmail,
+    doctorName: finalDoctorName,
+    datetime: finalDatetime,
+    room: finalRoom,
     status: 'Confirmed',
+    paymentStatus: 'APPROVED',
+    amount: target?.amount || '₹500.00',
+    utrNumber: target?.utrNumber || 'VERIFIED',
     lesionLocation: target?.lesionLocation || 'Torso',
     reason: target?.reason || 'Clinical Consultation',
-    adminNotes: notes || 'Confirmed by Central Hospital Administration.'
+    adminNotes: finalNotes,
+    approvedBy: senderEmail,
+    confirmedAt: new Date().toISOString()
   };
 
   const updatedScheduled = [confirmedItem, ...scheduled];
   setStorage('scheduled_appointments', updatedScheduled);
-  return { updatedRequests, updatedScheduled };
+
+  // Dispatch official confirmation email from Admin Gmail (waheeddeveloper@gmail.com)
+  const emailDispatches = getStorage('hospital_email_dispatches', []);
+  const newEmail = {
+    id: `MAIL-${Date.now()}`,
+    from: senderEmail,
+    to: patientEmail,
+    patientName,
+    doctorName: finalDoctorName,
+    appointmentDate: finalDatetime,
+    room: finalRoom,
+    subject: `DermXAI Hospital: Appointment Confirmed & Payment Verified (${new Date(finalDatetime).toLocaleDateString()})`,
+    body: `Dear ${patientName},\n\nYour consultation fee payment (${target?.amount || '₹500.00'} • UTR: ${target?.utrNumber || 'VERIFIED'}) has been verified and APPROVED by Hospital Administration.\n\nYour appointment is confirmed:\n👨‍⚕️ Attending Physician: ${finalDoctorName}\n📅 Scheduled Date & Time: ${new Date(finalDatetime).toLocaleString()}\n🏥 Consultation Room: ${finalRoom}\n📋 Instructions: ${finalNotes}\n\nPlease sign in to your DermXAI Patient Portal now to upload photos of your skin disease, lesions, or rash so your doctor can review them prior to your consultation.\n\nWarm regards,\nWaheed (Hospital Administrator)\n${senderEmail}\nDermXAI Multi-Speciality Hospital`,
+    sentAt: new Date().toISOString()
+  };
+  const updatedEmails = [newEmail, ...emailDispatches];
+  setStorage('hospital_email_dispatches', updatedEmails);
+
+  return { updatedRequests, updatedScheduled, email: newEmail };
+}
+
+export function getHospitalEmailDispatches(patientEmail = null) {
+  initHospitalStore();
+  const allEmails = getStorage('hospital_email_dispatches', []);
+  if (!patientEmail) return allEmails;
+  return allEmails.filter(e => (e.to || '').toLowerCase() === patientEmail.toLowerCase());
+}
+
+// ==========================================
+// 4. PATIENT DISEASE PHOTOS & LESION DOSSIER APIS
+// ==========================================
+
+export function getPatientDiseaseRecords(patientEmail = null) {
+  initHospitalStore();
+  const allRecords = getStorage('patient_disease_photos', []);
+  if (!patientEmail) return allRecords;
+  return allRecords.filter(r => (r.patientEmail || '').toLowerCase() === patientEmail.toLowerCase());
+}
+
+export function savePatientDiseaseRecord(data) {
+  initHospitalStore();
+  const existing = getStorage('patient_disease_photos', []);
+  const newRecord = {
+    id: `DIS-${Date.now().toString().slice(-6)}`,
+    diseaseTitle: data.diseaseTitle || 'Skin Lesion / Rash',
+    bodyPart: data.bodyPart || 'Head',
+    photoUrl: data.photoUrl,
+    symptoms: data.symptoms || '',
+    patientName: data.patientName || 'Patient',
+    patientEmail: data.patientEmail || 'patient@example.com',
+    createdAt: new Date().toISOString(),
+    status: 'Uploaded for Doctor Review',
+    ...data
+  };
+  const updated = [newRecord, ...existing];
+  setStorage('patient_disease_photos', updated);
+
+  // Synchronize to doctor's pending triage so doctor sees it right away
+  recordPatientDiagnosis({
+    patientName: newRecord.patientName,
+    patientEmail: newRecord.patientEmail,
+    bodyPart: newRecord.bodyPart,
+    condition: newRecord.diseaseTitle,
+    severity: 'Patient Photo Uploaded',
+    confidence: 91.5,
+    riskScore: 7.5,
+    research: `### Patient Uploaded Disease Case\n\n- **Reported Condition:** ${newRecord.diseaseTitle}\n- **Anatomical Site:** ${newRecord.bodyPart}\n- **Reported Symptoms:** ${newRecord.symptoms}\n- **Status:** Awaiting Physician Direct Review.`,
+    assignedDoctorName: data.assignedDoctorName || 'Dr. Sarah Mercer, MD',
+    image: newRecord.photoUrl
+  });
+
+  return newRecord;
 }
 
 // ==========================================

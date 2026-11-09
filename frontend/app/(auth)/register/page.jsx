@@ -59,11 +59,29 @@ export default function RegisterPage() {
         return;
       }
 
-      setSuccessInfo({
-        type: 'PENDING_APPROVAL',
-        title: 'Registration Submitted for Admin Approval!',
-        message: `Your ${role.toUpperCase()} account (${cleanName}) has been registered. All first-time sign-ups are protected by administrative security and are PENDING approval by Hospital Administrator (waheeddeveloper@gmail.com). You can sign in as soon as Admin approves your account in the Admin Tower.`
-      });
+      if (role === 'patient') {
+        // Patient accounts are immediately active! No admin approval needed.
+        localStorage.setItem('session_user', JSON.stringify({
+          id: res.user.id,
+          name: res.user.name,
+          email: res.user.email,
+          role: 'patient',
+          department: res.user.department,
+          status: 'APPROVED'
+        }));
+
+        setSuccessInfo({
+          type: 'PATIENT_ACTIVE',
+          title: 'Patient Account Activated!',
+          message: `Welcome, ${cleanName}! Your patient account is active immediately with zero waiting. You can now proceed to book an appointment with our specialist physicians and scan to pay the consultation fee via UPI QR Pay.`
+        });
+      } else {
+        setSuccessInfo({
+          type: 'PENDING_APPROVAL',
+          title: 'Staff Registration Submitted for Admin Approval!',
+          message: `Your ${role.toUpperCase()} account (${cleanName}) has been registered. Clinical employee accounts are protected by hospital security protocols and are PENDING approval by Hospital Administrator (waheeddeveloper@gmail.com). You will be able to sign in once approved in the Admin Tower.`
+        });
+      }
 
     } catch (error) {
       console.error('Registration error:', error);
@@ -84,7 +102,7 @@ export default function RegisterPage() {
           </div>
           <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Create Hospital Account</h2>
           <p className="text-gray-500 text-xs mt-1 text-center">
-            Register as a Patient, Physician, Pharmacist, or Pathology Specialist.
+            Register as a Patient (Instant Access), or Physician, Pharmacist & Lab Tech.
           </p>
         </div>
 
@@ -114,13 +132,30 @@ export default function RegisterPage() {
               {successInfo.message}
             </p>
 
-            <div className="pt-4 flex justify-center gap-3">
-              <Link
-                href="/login"
-                className="bg-[#306CE9] hover:bg-blue-700 text-white font-bold text-xs px-6 py-2.5 rounded-xl shadow-sm transition-all"
-              >
-                Go to Sign In
-              </Link>
+            <div className="pt-4 flex flex-col sm:flex-row justify-center gap-3">
+              {successInfo.type === 'PATIENT_ACTIVE' ? (
+                <>
+                  <Link
+                    href="/patient/appointments"
+                    className="bg-[#0F4C81] hover:bg-blue-900 text-white font-bold text-xs px-6 py-2.5 rounded-xl shadow-sm transition-all"
+                  >
+                    Book Appointment & Pay (QR) →
+                  </Link>
+                  <Link
+                    href="/patient/dashboard"
+                    className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-6 py-2.5 rounded-xl shadow-sm transition-all"
+                  >
+                    Go to Patient Dashboard
+                  </Link>
+                </>
+              ) : (
+                <Link
+                  href="/login?portal=staff"
+                  className="bg-[#306CE9] hover:bg-blue-700 text-white font-bold text-xs px-6 py-2.5 rounded-xl shadow-sm transition-all"
+                >
+                  Go to Staff Login
+                </Link>
+              )}
             </div>
           </div>
         ) : (
