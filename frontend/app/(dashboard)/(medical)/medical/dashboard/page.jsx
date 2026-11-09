@@ -12,6 +12,7 @@ export default function MedicalDashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedOrderForPrint, setSelectedOrderForPrint] = useState(null);
   const [pharmacistNotes, setPharmacistNotes] = useState({});
+  const [pharmacistProfile, setPharmacistProfile] = useState({ name: 'Elena Rostova, PharmD', license: 'RPH-8849201' });
 
   const loadPrescriptions = () => {
     initHospitalStore();
@@ -27,6 +28,15 @@ export default function MedicalDashboard() {
 
   useEffect(() => {
     loadPrescriptions();
+    if (typeof window !== 'undefined') {
+      const session = JSON.parse(localStorage.getItem('session_user') || '{}');
+      if (session.name) {
+        setPharmacistProfile({
+          name: session.name,
+          license: session.license || 'RPH-8849201'
+        });
+      }
+    }
   }, []);
 
   const handleDispense = (id) => {
@@ -36,7 +46,7 @@ export default function MedicalDashboard() {
           ...q, 
           status: 'Dispensed', 
           dispensedAt: new Date().toLocaleTimeString(),
-          pharmacist: 'Elena Rostova, PharmD',
+          pharmacist: pharmacistProfile.name,
           verificationNote: pharmacistNotes[id] || 'Topical safety profile verified. Patient advised on sun protection.'
         };
       }
@@ -69,7 +79,7 @@ export default function MedicalDashboard() {
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Hospital Pharmacy & Dispensary Desk</h1>
               <p className="text-gray-500 text-xs mt-0.5">
-                Logged in: <strong className="text-gray-800">Elena Rostova, PharmD</strong> • License: RPH-8849201 • Central Hospital Formulary
+                Logged in: <strong className="text-gray-800">{pharmacistProfile.name}</strong> • License: {pharmacistProfile.license} • Central Hospital Formulary
               </p>
             </div>
           </div>
@@ -265,7 +275,7 @@ export default function MedicalDashboard() {
               </div>
 
               <div className="border-t border-dashed border-gray-300 pt-3 flex justify-between text-gray-500 text-[11px]">
-                <span>Pharmacist: Elena Rostova, PharmD</span>
+                <span>Pharmacist: {selectedOrderForPrint.pharmacist || pharmacistProfile.name}</span>
                 <span>Date: {new Date().toLocaleDateString()}</span>
               </div>
             </div>

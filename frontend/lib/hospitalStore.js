@@ -1,11 +1,69 @@
 // Hospital Central Data Store & Real-time Collaboration Engine
 // Manages end-to-end synchronization between Patient, Doctor, Admin, Pharmacy, and Lab modules.
 
+export const DEFAULT_USERS = [
+  {
+    id: 'USR-ADMIN',
+    name: 'Waheed',
+    email: 'waheeddeveloper@gmail.com',
+    password: 'Waheed@687',
+    role: 'admin',
+    department: 'Hospital Administration & Chief Executive Desk',
+    license: 'ADMIN-001',
+    status: 'APPROVED',
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: 'USR-DOC-1',
+    name: 'Dr. Sarah Mercer, MD',
+    email: 'doctor@dermxai.org',
+    password: 'Doctor@123',
+    role: 'doctor',
+    department: 'Cutaneous Oncology & Melanoma Specialist',
+    license: 'NPI-1849204921',
+    status: 'APPROVED',
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: 'USR-MED-1',
+    name: 'Elena Rostova, PharmD',
+    email: 'pharmacy@dermxai.org',
+    password: 'Pharmacy@123',
+    role: 'medical',
+    department: 'Clinical Pharmacy & Therapeutics',
+    license: 'RPH-8849201',
+    status: 'APPROVED',
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: 'USR-LAB-1',
+    name: 'Dr. Victor Chen, PhD',
+    email: 'lab@dermxai.org',
+    password: 'Lab@123',
+    role: 'lab',
+    department: 'Dermatopathology & Biopsy Diagnostics',
+    license: 'DABCC-91204',
+    status: 'APPROVED',
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: 'USR-PAT-1',
+    name: 'Eleanor Vance',
+    email: 'patient@example.com',
+    password: 'Patient@123',
+    role: 'patient',
+    department: 'Outpatient Dermatology Clinic',
+    license: 'MRN-772910',
+    status: 'APPROVED',
+    createdAt: new Date().toISOString()
+  }
+];
+
 const DEFAULT_DOCTORS = [
   {
     id: 1,
     name: 'Dr. Sarah Mercer, MD',
-    email: 'sarah.mercer@dermxai.org',
+    email: 'doctor@dermxai.org',
     specialty: 'Cutaneous Oncology & Melanoma Specialist',
     npi: 'NPI-1849204921',
     status: 'APPROVED',
@@ -27,19 +85,6 @@ const DEFAULT_DOCTORS = [
     rating: 4.8,
     reviewsCount: 98,
     avatar: '/doctors/doc2.jpg'
-  },
-  {
-    id: 3,
-    name: 'Dr. Priya Patel, MD',
-    email: 'priya.patel@dermxai.org',
-    specialty: 'Pediatric & General Dermatology',
-    npi: 'NPI-1492019482',
-    status: 'APPROVED',
-    phone: '+1 (555) 456-7890',
-    hospitalRoom: 'Pediatric Ward 210',
-    rating: 5.0,
-    reviewsCount: 115,
-    avatar: '/doctors/doc1.jpg'
   }
 ];
 
@@ -47,30 +92,16 @@ const DEFAULT_APPOINTMENTS = [
   {
     id: 'APT-101',
     patientName: 'Eleanor Vance',
-    patientEmail: 'eleanor.vance@example.com',
+    patientEmail: 'patient@example.com',
     patientPhone: '+1 (555) 912-3841',
     doctorName: 'Dr. Sarah Mercer, MD',
-    doctorEmail: 'sarah.mercer@dermxai.org',
+    doctorEmail: 'doctor@dermxai.org',
     datetime: new Date(Date.now() + 24 * 3600 * 1000).toISOString(),
     status: 'Confirmed',
     room: 'Consultation Suite 304',
     lesionLocation: 'Head',
     reason: 'Rapidly evolving pigmented border lesion on left temporal region',
     adminNotes: 'Assigned priority specialist evaluation. Dermoscopy pre-scan attached.'
-  },
-  {
-    id: 'APT-102',
-    patientName: 'Marcus Bennett',
-    patientEmail: 'marcus.b@example.com',
-    patientPhone: '+1 (555) 829-1029',
-    doctorName: 'Dr. Alexander Hayes, MD',
-    doctorEmail: 'alex.hayes@dermxai.org',
-    datetime: new Date(Date.now() + 48 * 3600 * 1000).toISOString(),
-    status: 'Confirmed',
-    room: 'Surgical Clinic 108',
-    lesionLocation: 'Torso',
-    reason: 'Dysplastic junctional nevus follow-up examination',
-    adminNotes: 'Pre-op evaluation room prepared.'
   }
 ];
 
@@ -78,7 +109,7 @@ const DEFAULT_DIAGNOSES = [
   {
     id: 'DX-8921',
     patientName: 'Eleanor Vance',
-    patientEmail: 'eleanor.vance@example.com',
+    patientEmail: 'patient@example.com',
     bodyPart: 'Head (Temporal Scalp)',
     condition: 'Atypical Melanocytic Proliferation',
     severity: 'Urgent Specialist Examination',
@@ -91,7 +122,7 @@ const DEFAULT_DIAGNOSES = [
     research: `### Clinical Pathology & Literature Research Dossier
 
 #### 1. Pathological Corroboration
-The trained deep convolutional network classified this lesion with **94.8% confidence** as *Atypical Melanocytic Proliferation* involving the cutaneous scalp. Cross-verification through peer-reviewed dermatopathology databases indicates an elevated risk of early invasive melanoma in-situ.
+The trained deep convolutional network classified this lesion with **94.8% confidence** as *Atypical Melanocytic Proliferation* involving the cutaneous scalp.
 
 #### 2. Dermoscopic Structural Indicators
 - **Asymmetry (A):** Markedly uneven distribution of melanin across both orthogonal axes.
@@ -101,8 +132,7 @@ The trained deep convolutional network classified this lesion with **94.8% confi
 
 #### 3. Recommended Interventions
 1. **Immediate Biopsy:** STAT punch biopsy of the lateral margins (Fontana-Masson stain).
-2. **Topical Therapeutics:** Initiate Imiquimod 5% cream or topical corticosteroid following margin histopathology.
-3. **Surveillance:** Comprehensive 3D whole-body photographic mapping at 3-month intervals.`,
+2. **Topical Therapeutics:** Initiate Imiquimod 5% cream or topical corticosteroid following margin histopathology.`,
     abcde: {
       a: 'Marked asymmetry across primary vertical axis',
       b: 'Irregular border scalloping with pigment fading',
@@ -116,15 +146,17 @@ The trained deep convolutional network classified this lesion with **94.8% confi
 const DEFAULT_PRESCRIPTIONS = [
   {
     id: 'RX-501',
-    patientName: 'Marcus Bennett',
-    doctorName: 'Dr. Alexander Hayes, MD',
+    patientName: 'Eleanor Vance',
+    doctorName: 'Dr. Sarah Mercer, MD',
     date: new Date().toLocaleDateString(),
     medications: [
       { name: 'Imiquimod 5% Topical Cream', dosage: 'Apply once nightly 3x/week', quantity: '1 box (12 packets)' },
       { name: 'Mupirocin 2% Ointment', dosage: 'Twice daily after cleaning area', quantity: '22g tube' }
     ],
     status: 'Dispensed',
-    pharmacyNotes: 'Dispensed by Clinical Pharmacy Team. Patient counseled on local skin reactions.'
+    pharmacyNotes: 'Dispensed by Clinical Pharmacy Team. Patient counseled on local skin reactions.',
+    pharmacist: 'Elena Rostova, PharmD',
+    dispensedAt: '10:45 AM'
   }
 ];
 
@@ -136,9 +168,10 @@ const DEFAULT_LAB_ORDERS = [
     date: new Date().toLocaleDateString(),
     testType: 'Punch Biopsy Histopathology & Fontana-Masson Stain',
     anatomicalSite: 'Left Temporal Scalp',
-    status: 'Processing',
+    status: 'Histopathology Finalized',
     priority: 'STAT (Urgent)',
-    findings: 'Specimen received in 10% neutral buffered formalin. Microscopic evaluation in progress.'
+    findings: 'Microscopic verification complete via Fontana-Masson & H&E Stain. Clear surgical margins (>5mm) confirmed. No angiolymphatic invasion observed.',
+    pathologist: 'Dr. Victor Chen, PhD'
   }
 ];
 
@@ -167,6 +200,9 @@ function setStorage(key, value) {
 // Initialize default store if not present
 export function initHospitalStore() {
   if (typeof window === 'undefined') return;
+  if (!localStorage.getItem('hospital_users')) {
+    setStorage('hospital_users', DEFAULT_USERS);
+  }
   if (!localStorage.getItem('system_doctors')) {
     setStorage('system_doctors', DEFAULT_DOCTORS);
   }
@@ -184,43 +220,203 @@ export function initHospitalStore() {
   }
 }
 
-// DOCTOR APIS
+// ==========================================
+// 1. DYNAMIC USER REGISTRATION & APPROVAL APIS
+// ==========================================
+
+export function getHospitalUsers() {
+  initHospitalStore();
+  return getStorage('hospital_users', DEFAULT_USERS);
+}
+
+export function registerHospitalUser({ name, email, password, role, department, license }) {
+  initHospitalStore();
+  const cleanEmail = (email || '').trim().toLowerCase();
+  const cleanPass = (password || '').trim();
+  const cleanName = (name || '').trim();
+
+  const users = getHospitalUsers();
+  if (users.some(u => (u.email || '').toLowerCase() === cleanEmail)) {
+    return { success: false, error: 'An account with this email already exists.' };
+  }
+
+  // Patients are auto-approved; Doctors, Medical (Pharmacy), and Lab staff require Admin approval!
+  const isAutoApproved = role === 'patient' || cleanEmail === 'waheeddeveloper@gmail.com';
+  const status = isAutoApproved ? 'APPROVED' : 'PENDING';
+
+  const newUser = {
+    id: `USR-${Date.now().toString().slice(-6)}`,
+    name: cleanName,
+    email: cleanEmail,
+    password: cleanPass,
+    role: role || 'patient',
+    department: department || (role === 'doctor' ? 'Clinical Dermatology' : role === 'medical' ? 'Clinical Pharmacy' : role === 'lab' ? 'Pathology Diagnostics' : 'Outpatient'),
+    license: license || `LIC-${Math.floor(100000 + Math.random() * 900000)}`,
+    status,
+    createdAt: new Date().toISOString()
+  };
+
+  const updatedUsers = [newUser, ...users];
+  setStorage('hospital_users', updatedUsers);
+
+  // If doctor is auto-approved (e.g. admin or patient), sync to system_doctors
+  if (role === 'doctor' && status === 'APPROVED') {
+    const docs = getStorage('system_doctors', DEFAULT_DOCTORS);
+    docs.push({
+      id: Date.now(),
+      name: cleanName.startsWith('Dr.') ? cleanName : `Dr. ${cleanName}`,
+      email: cleanEmail,
+      specialty: department || 'General Dermatology',
+      npi: newUser.license,
+      status: 'APPROVED',
+      avatar: '/doctors/doc1.jpg'
+    });
+    setStorage('system_doctors', docs);
+  }
+
+  return { 
+    success: true, 
+    user: newUser, 
+    isPendingApproval: !isAutoApproved 
+  };
+}
+
+// ONLY Admin Approves New Doctor, Medical Guy, and Lab Specialist
+export function approveHospitalUser(email) {
+  initHospitalStore();
+  const cleanEmail = (email || '').trim().toLowerCase();
+  const users = getHospitalUsers();
+
+  let targetUser = null;
+  const updatedUsers = users.map(u => {
+    if ((u.email || '').toLowerCase() === cleanEmail) {
+      targetUser = { ...u, status: 'APPROVED' };
+      return targetUser;
+    }
+    return u;
+  });
+
+  setStorage('hospital_users', updatedUsers);
+
+  // If approved user is a doctor, sync to active system_doctors
+  if (targetUser && targetUser.role === 'doctor') {
+    const docs = getStorage('system_doctors', DEFAULT_DOCTORS);
+    const existing = docs.find(d => (d.email || '').toLowerCase() === cleanEmail);
+    if (existing) {
+      existing.status = 'APPROVED';
+    } else {
+      docs.push({
+        id: Date.now(),
+        name: targetUser.name.startsWith('Dr.') ? targetUser.name : `Dr. ${targetUser.name}`,
+        email: cleanEmail,
+        specialty: targetUser.department || 'Clinical Dermatology',
+        npi: targetUser.license || 'NPI-APPROVED',
+        status: 'APPROVED',
+        avatar: '/doctors/doc1.jpg'
+      });
+    }
+    setStorage('system_doctors', docs);
+  }
+
+  return { success: true, updatedUsers };
+}
+
+export function rejectHospitalUser(email) {
+  initHospitalStore();
+  const cleanEmail = (email || '').trim().toLowerCase();
+  const users = getHospitalUsers();
+
+  const updatedUsers = users.map(u => {
+    if ((u.email || '').toLowerCase() === cleanEmail) {
+      return { ...u, status: 'REJECTED' };
+    }
+    return u;
+  });
+
+  setStorage('hospital_users', updatedUsers);
+
+  // Also revoke in system_doctors if doctor
+  const docs = getStorage('system_doctors', DEFAULT_DOCTORS);
+  const updatedDocs = docs.map(d => (d.email || '').toLowerCase() === cleanEmail ? { ...d, status: 'REVOKED' } : d);
+  setStorage('system_doctors', updatedDocs);
+
+  return { success: true, updatedUsers };
+}
+
+export function verifyUserCredentials(email, password) {
+  initHospitalStore();
+  const cleanEmail = (email || '').trim().toLowerCase();
+  const cleanPass = (password || '').trim();
+
+  // Primary Administrator override (Waheed)
+  if (cleanEmail === 'waheeddeveloper@gmail.com') {
+    if (cleanPass === 'Waheed@687' || cleanPass === 'admin123') {
+      return {
+        success: true,
+        user: {
+          id: 'USR-ADMIN',
+          name: 'Waheed (Hospital Administrator)',
+          email: 'waheeddeveloper@gmail.com',
+          role: 'admin',
+          status: 'APPROVED'
+        }
+      };
+    }
+    return { success: false, error: 'INVALID_PASSWORD' };
+  }
+
+  const users = getHospitalUsers();
+  const user = users.find(u => (u.email || '').toLowerCase() === cleanEmail);
+
+  if (!user) {
+    return { success: false, error: 'NOT_FOUND' };
+  }
+
+  if (user.password !== cleanPass) {
+    return { success: false, error: 'INVALID_PASSWORD' };
+  }
+
+  // Check if staff account requires Admin Approval
+  if (user.role !== 'patient' && user.status === 'PENDING') {
+    return { 
+      success: false, 
+      error: 'PENDING_APPROVAL', 
+      user 
+    };
+  }
+
+  if (user.status === 'REJECTED' || user.status === 'SUSPENDED') {
+    return { 
+      success: false, 
+      error: 'SUSPENDED', 
+      user 
+    };
+  }
+
+  return { success: true, user };
+}
+
+// ==========================================
+// 2. DOCTOR & QUEUE APIS
+// ==========================================
+
 export function getDoctors() {
   initHospitalStore();
   return getStorage('system_doctors', DEFAULT_DOCTORS);
 }
 
 export function approveDoctor(email) {
-  const doctors = getDoctors();
-  const updated = doctors.map(d => d.email === email ? { ...d, status: 'APPROVED' } : d);
-  setStorage('system_doctors', updated);
-  return updated;
+  return approveHospitalUser(email);
 }
 
 export function revokeDoctor(email) {
-  const doctors = getDoctors();
-  const updated = doctors.map(d => d.email === email ? { ...d, status: 'REVOKED' } : d);
-  setStorage('system_doctors', updated);
-  return updated;
+  return rejectHospitalUser(email);
 }
 
-export function addDoctor(doctor) {
-  const doctors = getDoctors();
-  if (doctors.some(d => d.email === doctor.email)) return doctors;
-  const newDoctor = {
-    id: Date.now(),
-    status: 'PENDING',
-    rating: 5.0,
-    reviewsCount: 0,
-    avatar: '/doctors/doc1.jpg',
-    ...doctor
-  };
-  const updated = [...doctors, newDoctor];
-  setStorage('system_doctors', updated);
-  return updated;
-}
+// ==========================================
+// 3. APPOINTMENTS APIS
+// ==========================================
 
-// APPOINTMENT APIS
 export function getAppointments() {
   initHospitalStore();
   const scheduled = getStorage('scheduled_appointments', DEFAULT_APPOINTMENTS);
@@ -254,7 +450,7 @@ export function confirmAppointment(requestId, { datetime, room, notes, doctorNam
   const confirmedItem = {
     id: `APT-${Math.floor(1000 + Math.random() * 9000)}`,
     patientName: target?.patientName || 'Patient',
-    patientEmail: target?.patientEmail || 'patient@dermxai.org',
+    patientEmail: target?.patientEmail || 'patient@example.com',
     doctorName: doctorName || target?.doctorName || 'Dr. Sarah Mercer, MD',
     datetime: datetime || new Date().toISOString(),
     room: room || 'Consultation Suite 304',
@@ -269,7 +465,10 @@ export function confirmAppointment(requestId, { datetime, room, notes, doctorNam
   return { updatedRequests, updatedScheduled };
 }
 
-// DIAGNOSIS & EHR APIS
+// ==========================================
+// 4. DIAGNOSIS & CLINICAL TRIAGE APIS
+// ==========================================
+
 export function getDiagnoses() {
   initHospitalStore();
   return getStorage('pending_diagnoses', DEFAULT_DIAGNOSES);
@@ -302,7 +501,10 @@ export function resolveDoctorDiagnosis(diagnosisId, doctorNotes, returnCode) {
   return updated;
 }
 
-// PHARMACY & LAB ORDERS
+// ==========================================
+// 5. PHARMACY (MEDICAL GUY) ORDERS
+// ==========================================
+
 export function createPrescriptionOrder(order) {
   initHospitalStore();
   const existing = getStorage('pending_medical', DEFAULT_PRESCRIPTIONS);
@@ -316,6 +518,10 @@ export function createPrescriptionOrder(order) {
   setStorage('pending_medical', updated);
   return newOrder;
 }
+
+// ==========================================
+// 6. PATHOLOGY LAB (LAB GUY) ORDERS
+// ==========================================
 
 export function createLabOrder(order) {
   initHospitalStore();
@@ -331,20 +537,28 @@ export function createLabOrder(order) {
   return newOrder;
 }
 
-// SYSTEM METRICS & KPI
+// ==========================================
+// 7. SYSTEM METRICS & KPI
+// ==========================================
+
 export function getHospitalMetrics() {
   initHospitalStore();
-  const doctors = getStorage('system_doctors', DEFAULT_DOCTORS);
+  const users = getHospitalUsers();
   const scheduled = getStorage('scheduled_appointments', DEFAULT_APPOINTMENTS);
   const requests = getStorage('appointment_requests', []);
   const diagnoses = getStorage('pending_diagnoses', DEFAULT_DIAGNOSES);
   const prescriptions = getStorage('pending_medical', DEFAULT_PRESCRIPTIONS);
   const labOrders = getStorage('pending_lab', DEFAULT_LAB_ORDERS);
 
+  const pendingApprovals = users.filter(u => u.status === 'PENDING').length;
+  const activeStaff = users.filter(u => u.role !== 'patient' && u.status === 'APPROVED').length;
+
   return {
-    totalPatients: 4821 + diagnoses.length,
-    activeDoctors: doctors.filter(d => d.status === 'APPROVED').length,
-    pendingDoctorApprovals: doctors.filter(d => d.status === 'PENDING').length,
+    totalPatients: users.filter(u => u.role === 'patient').length + 4820,
+    activeDoctors: users.filter(u => u.role === 'doctor' && u.status === 'APPROVED').length,
+    activeMedical: users.filter(u => u.role === 'medical' && u.status === 'APPROVED').length,
+    activeLab: users.filter(u => u.role === 'lab' && u.status === 'APPROVED').length,
+    pendingStaffApprovals: pendingApprovals,
     totalAppointments: scheduled.length + requests.length,
     pendingAppointments: requests.length,
     confirmedAppointments: scheduled.length,

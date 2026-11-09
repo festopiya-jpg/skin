@@ -13,6 +13,7 @@ export default function LabDashboard() {
   const [selectedLabForPrint, setSelectedLabForPrint] = useState(null);
   const [stainTypes, setStainTypes] = useState({});
   const [marginStatuses, setMarginStatuses] = useState({});
+  const [pathologistProfile, setPathologistProfile] = useState({ name: 'Dr. Victor Chen, PhD', license: 'DABCC-91204' });
 
   const loadLabQueue = () => {
     initHospitalStore();
@@ -28,6 +29,15 @@ export default function LabDashboard() {
 
   useEffect(() => {
     loadLabQueue();
+    if (typeof window !== 'undefined') {
+      const session = JSON.parse(localStorage.getItem('session_user') || '{}');
+      if (session.name) {
+        setPathologistProfile({
+          name: session.name,
+          license: session.license || 'DABCC-91204'
+        });
+      }
+    }
   }, []);
 
   const handleCompleteTest = (id) => {
@@ -42,7 +52,7 @@ export default function LabDashboard() {
           completedAt: new Date().toLocaleTimeString(),
           stain: chosenStain,
           marginStatus: chosenMargin,
-          pathologist: 'Dr. Victor Chen, PhD (Dermatopathology)',
+          pathologist: pathologistProfile.name,
           findings: `Microscopic verification complete via ${chosenStain}. Histological assessment: ${chosenMargin}. No angiolymphatic invasion observed.`
         };
       }
@@ -75,7 +85,7 @@ export default function LabDashboard() {
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Dermatopathology & Biopsy Lab Desk</h1>
               <p className="text-gray-500 text-xs mt-0.5">
-                Logged in: <strong className="text-gray-800">Dr. Victor Chen, PhD</strong> • Credentials: DABCC-91204 • Histology & Immunofluorescence Lab
+                Logged in: <strong className="text-gray-800">{pathologistProfile.name}</strong> • Credentials: {pathologistProfile.license} • Histology & Immunofluorescence Lab
               </p>
             </div>
           </div>
@@ -266,7 +276,7 @@ export default function LabDashboard() {
               </div>
 
               <div className="border-t border-dashed border-gray-300 pt-3 flex justify-between text-gray-500 text-[11px]">
-                <span>Pathologist: Dr. Victor Chen, PhD</span>
+                <span>Pathologist: {selectedLabForPrint.pathologist || pathologistProfile.name}</span>
                 <span>Date: {new Date().toLocaleDateString()}</span>
               </div>
             </div>
