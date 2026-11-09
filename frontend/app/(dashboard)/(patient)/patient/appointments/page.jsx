@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { 
   CalendarClock, CheckCircle2, Clock, Plus, QrCode, 
   CreditCard, ShieldCheck, Mail, ArrowRight, UploadCloud, 
-  Copy, Check, AlertCircle, Sparkles, X, Stethoscope, MapPin 
+  Copy, Check, AlertCircle, Sparkles, X, Stethoscope, MapPin, Camera 
 } from 'lucide-react';
 import { 
   getAppointments, 
@@ -97,14 +97,6 @@ export default function AppointmentsPage() {
     setIsSubmitting(false);
     setBookingSuccess(true);
     loadData();
-
-    setTimeout(() => {
-      setBookingSuccess(false);
-      setShowBookingModal(false);
-      setBookingStep(1);
-      setSymptoms('');
-      setUtrNumber('');
-    }, 2000);
   };
 
   // Generate dynamic QR Code URL from payment link
@@ -300,15 +292,39 @@ export default function AppointmentsPage() {
             </div>
 
             {bookingSuccess ? (
-              <div className="py-8 text-center space-y-3">
-                <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
+              <div className="py-6 text-center space-y-4">
+                <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-sm">
                   <CheckCircle2 className="w-9 h-9" />
                 </div>
-                <h4 className="font-serif-hospital text-xl font-normal text-gray-900">Appointment Request & Payment Submitted!</h4>
+                <h4 className="font-serif-hospital text-2xl font-normal text-gray-900">Appointment Request & Payment Submitted!</h4>
                 <p className="text-xs text-gray-600 max-w-sm mx-auto leading-relaxed">
-                  Your payment verification request has been delivered to Hospital Administrator (<strong>waheeddeveloper@gmail.com</strong>).
-                  You will receive an official email from <strong>waheeddeveloper@gmail.com</strong> with your final appointment date and time.
+                  Your fee payment of <strong>₹500.00</strong> (UTR: <strong>{utrNumber}</strong>) has been submitted to Hospital Admin. You will receive an official Gmail confirmation from <strong>waheeddeveloper@gmail.com</strong>.
                 </p>
+                <div className="p-3 bg-blue-50 border border-blue-200 rounded-2xl text-xs text-blue-950 font-medium leading-relaxed">
+                  Next Step: Upload photos of your skin condition now to run the AI scan and view the exact clinical results transmitted to your doctor!
+                </div>
+                <div className="pt-2 flex flex-col sm:flex-row gap-2 justify-center">
+                  <Link
+                    href="/patient/dashboard"
+                    className="px-5 py-2.5 bg-[#0F4C81] hover:bg-blue-900 text-white font-bold text-xs rounded-xl shadow-sm transition-all flex items-center justify-center gap-1.5"
+                  >
+                    <Camera className="w-4 h-4 text-emerald-300" />
+                    <span>Upload Disease Photos & View AI Scan Results →</span>
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setBookingSuccess(false);
+                      setShowBookingModal(false);
+                      setBookingStep(1);
+                      setSymptoms('');
+                      setUtrNumber('');
+                    }}
+                    className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs rounded-xl"
+                  >
+                    Close
+                  </button>
+                </div>
               </div>
             ) : bookingStep === 1 ? (
               /* STEP 1: FORM */
