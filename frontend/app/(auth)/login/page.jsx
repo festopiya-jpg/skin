@@ -102,61 +102,96 @@ function LoginForm() {
   const patientPreset = DEFAULT_USERS.find(u => u.role === 'patient');
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
-      <div className="w-full max-w-md bg-white rounded-2xl p-7 shadow-xl border border-gray-200">
-        
-        {/* Hospital Branding Header */}
-        <div className="flex flex-col items-center mb-5">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#0F4C81] to-[#306CE9] flex items-center justify-center text-white mb-2 shadow-sm">
-            <Shield className="w-7 h-7 fill-white/20 stroke-white" />
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="text-xl font-black tracking-tight text-[#0F4C81]">DermXAI</span>
-            <span className="text-xs font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-800">Hospital</span>
-          </div>
-          <p className="text-gray-500 text-xs mt-0.5 text-center">
-            {activePortal === 'patient' 
-              ? 'Patient Appointment & AI Diagnostic Portal' 
-              : 'Secure Employee & Clinical Staff Portal'}
-          </p>
-        </div>
+    <div className="min-h-screen flex flex-col bg-slate-50">
+      
+      {/* Top Hospital Utility Header (Matching momhospital.in) */}
+      <header className="w-full bg-white border-b border-gray-200 shadow-2xs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#0F4C81] to-[#306CE9] flex items-center justify-center text-white shadow-xs">
+              <Shield className="w-5 h-5 fill-white/20 stroke-white" />
+            </div>
+            <div className="flex flex-col">
+              <div className="flex items-center gap-1.5">
+                <span className="text-lg font-black tracking-tight text-[#0F4C81]">DermXAI</span>
+                <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-blue-100 text-blue-800">Hospital</span>
+              </div>
+              <span className="text-[9px] uppercase font-bold tracking-wider text-gray-500 hidden sm:block">
+                Multi-Speciality Hospital & Research Institute
+              </span>
+            </div>
+          </Link>
 
-        {/* Portal Switcher Tabs (Patient vs Staff) */}
-        <div className="grid grid-cols-2 p-1 bg-slate-100 rounded-xl mb-5 border border-slate-200 text-xs font-bold">
-          <button
-            type="button"
-            onClick={() => {
-              setActivePortal('patient');
-              setErrorMessage('');
-              setHelperNotice('');
-            }}
-            className={`py-2 rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-              activePortal === 'patient'
-                ? 'bg-white text-[#0F4C81] shadow-xs'
-                : 'text-gray-500 hover:text-gray-900'
-            }`}
+          <a 
+            href="tel:+918912788999" 
+            className="flex items-center gap-2 py-1.5 px-3 rounded-full bg-red-50 border border-red-200 text-red-700 hover:bg-red-100 transition-colors"
           >
-            <UserCheck className="w-4 h-4 text-emerald-600" />
-            <span>Patient Login</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              setActivePortal('staff');
-              setErrorMessage('');
-              setHelperNotice('');
-            }}
-            className={`py-2 rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-              activePortal === 'staff'
-                ? 'bg-white text-[#0F4C81] shadow-xs'
-                : 'text-gray-500 hover:text-gray-900'
-            }`}
-          >
-            <ShieldCheck className="w-4 h-4 text-purple-600" />
-            <span>Sign In as Staff</span>
-          </button>
+            <div className="w-2 h-2 rounded-full bg-red-600 animate-ping inline-block" />
+            <span className="text-[10px] uppercase font-bold text-red-600 hidden sm:inline">Emergency 24/7:</span>
+            <span className="text-xs font-bold text-gray-900 font-mono">+91 891 278 8999</span>
+          </a>
         </div>
+      </header>
+
+      {/* Main Login Card Container */}
+      <div className="flex-1 flex items-center justify-center p-4 py-8">
+        <div className="w-full max-w-md bg-white rounded-3xl p-7 sm:p-8 shadow-xl border border-gray-200/90 relative overflow-hidden">
+          
+          {/* Decorative Top Accent Bar */}
+          <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-[#0F4C81] via-[#D4A034] to-[#306CE9]" />
+
+          {/* Hospital Editorial Serif Header */}
+          <div className="text-center mb-6 pt-1">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#D4A034] block mb-1">
+              SECURE CLINICAL ACCESS
+            </span>
+            <h1 className="font-serif-hospital text-2xl sm:text-3xl text-[#0F4C81] font-normal leading-tight">
+              Advanced Care,<br />
+              <span className="italic">Compassionate Hearts.</span>
+            </h1>
+            <p className="text-gray-500 text-xs mt-1.5">
+              {activePortal === 'patient' 
+                ? 'Sign in to schedule doctor visits and manage disease records' 
+                : 'Hospital staff credentialing and medical management'}
+            </p>
+          </div>
+
+          {/* Portal Switcher Tabs (Patient vs Staff) */}
+          <div className="grid grid-cols-2 p-1 bg-slate-100 rounded-2xl mb-5 border border-slate-200 text-xs font-bold">
+            <button
+              type="button"
+              onClick={() => {
+                setActivePortal('patient');
+                setErrorMessage('');
+                setHelperNotice('');
+              }}
+              className={`py-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                activePortal === 'patient'
+                  ? 'bg-white text-[#0F4C81] shadow-xs'
+                  : 'text-gray-500 hover:text-gray-900'
+              }`}
+            >
+              <UserCheck className="w-4 h-4 text-emerald-600" />
+              <span>Patient Login</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setActivePortal('staff');
+                setErrorMessage('');
+                setHelperNotice('');
+              }}
+              className={`py-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                activePortal === 'staff'
+                  ? 'bg-white text-[#0F4C81] shadow-xs'
+                  : 'text-gray-500 hover:text-gray-900'
+              }`}
+            >
+              <ShieldCheck className="w-4 h-4 text-[#D4A034]" />
+              <span>Sign In as Staff</span>
+            </button>
+          </div>
 
         {/* TAB 1: PATIENT PORTAL LOGIN */}
         {activePortal === 'patient' ? (
@@ -336,6 +371,7 @@ function LoginForm() {
 
       </div>
     </div>
+  </div>
   );
 }
 

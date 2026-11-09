@@ -83,7 +83,7 @@ export default function MedicalRecordsPage() {
   return (
     <div className="max-w-5xl mx-auto space-y-6 pb-20">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Hospital Medical Records & Clinical Dossiers</h1>
+        <h1 className="text-3xl font-bold font-serif-hospital text-[#07213A]">Hospital Medical Records & Clinical Dossiers</h1>
         <p className="text-gray-500 mt-1">Verified patient records, physician sign-offs, pharmacy dispensations, and pathology biopsy findings.</p>
       </div>
 

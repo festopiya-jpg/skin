@@ -87,13 +87,13 @@ export default function AdminDashboard() {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">Hospital Admin Control Tower</h1>
+              <h1 className="text-2xl md:text-3xl font-bold font-serif-hospital tracking-tight">Hospital Admin Control Tower</h1>
               <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                 SYSTEM ACTIVE
               </span>
             </div>
             <p className="text-slate-300 text-xs md:text-sm mt-1">
-              Metropolitan Dermatology & Clinical Health Institute • Facility ID: <span className="font-mono text-cyan-300">HOSP-NY-8402</span>
+              DermXAI Multi-Speciality Hospital & Research Institute • Admin: <span className="font-mono text-cyan-300">waheeddeveloper@gmail.com</span>
             </p>
           </div>
         </div>
@@ -164,7 +164,7 @@ export default function AdminDashboard() {
               <Stethoscope className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-gray-900">Physician Licensing & Credentialing</h2>
+              <h2 className="text-lg font-bold font-serif-hospital text-[#07213A]">Physician Licensing & Credentialing</h2>
               <p className="text-xs text-gray-500">Verify physician licenses, specialties, and hospital room assignments.</p>
             </div>
           </div>
@@ -229,7 +229,7 @@ export default function AdminDashboard() {
               <CalendarClock className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-gray-900">Hospital Appointment Dispatch Desk</h2>
+              <h2 className="text-lg font-bold font-serif-hospital text-[#07213A]">Hospital Appointment Dispatch Desk</h2>
               <p className="text-xs text-gray-500">Incoming patient consultation bookings needing schedule & room assignment.</p>
             </div>
           </div>

@@ -259,7 +259,7 @@ export default function PatientDashboard() {
       {/* Header Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Patient Diagnostic Portal</h1>
+          <h1 className="text-3xl font-bold font-serif-hospital text-[#07213A] tracking-tight">Patient Diagnostic Portal</h1>
           <p className="text-gray-500 text-sm mt-1">Select an anatomical site on the 3D model, upload lesion & disease photos, and receive verified doctor care.</p>
         </div>
         <div className="flex items-center gap-3">
@@ -353,7 +353,7 @@ export default function PatientDashboard() {
           {/* Active Appointment Status */}
           <div className="glass-card rounded-2xl p-6 bg-white border border-gray-100 shadow-sm">
             <div className="flex justify-between items-center mb-3">
-              <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+              <h2 className="text-lg font-bold font-serif-hospital text-[#07213A] flex items-center gap-2">
                 <CalendarClock className="text-[#306CE9] w-5 h-5" />
                 Assigned Specialist
               </h2>
@@ -381,7 +381,7 @@ export default function PatientDashboard() {
           {/* AI Diagnostic Tool */}
           <div className="glass-card rounded-2xl p-6 flex flex-col flex-1 bg-white border border-gray-100 shadow-sm">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+              <h2 className="text-xl font-bold font-serif-hospital text-[#07213A] flex items-center gap-2">
                 <ShieldAlert className="text-[#306CE9] w-5 h-5" />
                 Dermoscopy Diagnostic Tool
               </h2>
@@ -447,7 +447,7 @@ export default function PatientDashboard() {
         <div className="flex flex-col gap-6">
           <div className="glass-card rounded-2xl p-6 overflow-hidden bg-white border border-gray-100 shadow-sm">
             <div className="flex justify-between items-center mb-2">
-              <h2 className="text-xl font-bold text-gray-900">3D Anatomical Health Map</h2>
+              <h2 className="text-xl font-bold font-serif-hospital text-[#07213A]">3D Anatomical Health Map</h2>
               <span className="text-xs text-blue-600 font-mono font-bold bg-blue-50 px-2 py-0.5 rounded">
                 Interactive Model
               </span>
@@ -457,7 +457,7 @@ export default function PatientDashboard() {
           </div>
           
           <div className="glass-card rounded-2xl p-6 bg-white border border-gray-100 shadow-sm">
-            <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <h2 className="text-lg font-bold font-serif-hospital text-[#07213A] mb-3 flex items-center gap-2">
               <FileText className="w-5 h-5 text-indigo-600" />
               Past Hospital Visits & Clinical Codes
             </h2>
@@ -498,7 +498,7 @@ export default function PatientDashboard() {
           <div>
             <div className="flex items-center gap-2">
               <Camera className="w-5 h-5 text-emerald-600" />
-              <h2 className="text-xl font-bold text-gray-900">My Disease Photos & Lesion Records</h2>
+              <h2 className="text-xl font-bold font-serif-hospital text-[#07213A]">My Disease Photos & Lesion Records</h2>
             </div>
             <p className="text-xs text-gray-500 mt-0.5">
               Keep photos of your skin rashes, spots, or lesions here for your doctor's clinical evaluation.

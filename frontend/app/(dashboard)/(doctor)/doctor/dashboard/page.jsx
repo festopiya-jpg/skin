@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { 
   Users, AlertTriangle, FileCheck, Search, Sparkles, X, 
-  MapPin, CheckCircle, Pill, Microscope, FileText, Send, Check 
+  MapPin, CheckCircle, Pill, Microscope, FileText, Send, Check,
+  Camera, Eye
 } from 'lucide-react';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
@@ -18,6 +19,7 @@ export default function DoctorDashboard() {
   const [patientQueue, setPatientQueue] = useState([]);
   const [doctorProfile, setDoctorProfile] = useState({ name: 'Dr. Sarah Mercer, MD', status: 'APPROVED' });
   const [selectedResearch, setSelectedResearch] = useState(null);
+  const [viewingPhoto, setViewingPhoto] = useState(null);
   const [actionNotice, setActionNotice] = useState('');
 
   // Prescription Modal State
@@ -134,7 +136,7 @@ export default function DoctorDashboard() {
             {doctorProfile.name.charAt(3) || 'D'}
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Physician Clinical Desk</h1>
+            <h1 className="text-3xl font-bold font-serif-hospital text-[#07213A]">Physician Clinical Desk</h1>
             <p className="text-gray-500 text-xs mt-1">
               Logged in: <strong className="text-gray-800">{doctorProfile.name}</strong> • Status: <span className="text-emerald-700 font-semibold">{doctorProfile.status}</span> • Active Clinical Queue
             </p>
@@ -183,7 +185,7 @@ export default function DoctorDashboard() {
       <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
         <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-slate-50/50">
           <div>
-            <h2 className="text-lg font-bold text-gray-900">Today's Patient Evaluations & AI Dermoscopy</h2>
+            <h2 className="text-lg font-bold font-serif-hospital text-[#07213A]">Today's Patient Evaluations & AI Dermoscopy</h2>
             <p className="text-xs text-gray-500">Review lesion analysis, write e-prescriptions to Pharmacy, or dispatch punch biopsies to Pathology Lab.</p>
           </div>
           <Link href="/doctor/patients" className="text-xs text-[#306CE9] hover:underline font-bold">
@@ -243,6 +245,16 @@ export default function DoctorDashboard() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex flex-wrap items-center justify-end gap-2">
+                          {patient.image && (
+                            <button 
+                              onClick={() => setViewingPhoto(patient)}
+                              className="text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-1.5 rounded-lg transition-colors font-semibold flex items-center gap-1 cursor-pointer"
+                              title="Inspect Patient Uploaded Disease / Lesion Photo"
+                            >
+                              <Camera className="w-3.5 h-3.5 text-emerald-600" />
+                              <span>View Photo</span>
+                            </button>
+                          )}
                           {patient.research && (
                             <button 
                               onClick={() => setSelectedResearch(patient.research)}
@@ -500,6 +512,99 @@ export default function DoctorDashboard() {
                 className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg transition-colors text-xs"
               >
                 Close Report
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 4: PATIENT DISEASE PHOTO INSPECTION MODAL */}
+      {viewingPhoto && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] border border-gray-200">
+            <div className="bg-[#07213A] p-5 flex justify-between items-center text-white shrink-0">
+              <div>
+                <h3 className="text-base font-bold font-serif-hospital flex items-center gap-2">
+                  <Camera className="w-5 h-5 text-emerald-400" />
+                  Patient Uploaded Lesion & Disease Photo
+                </h3>
+                <p className="text-xs text-blue-200 mt-0.5">
+                  Patient: <strong className="text-white">{viewingPhoto.patientName || viewingPhoto.name}</strong> • Site: {viewingPhoto.bodyPart || 'Unspecified'}
+                </p>
+              </div>
+              <button 
+                onClick={() => setViewingPhoto(null)}
+                className="text-white/70 hover:text-white p-1.5 rounded-full hover:bg-white/10 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-6 overflow-y-auto space-y-4">
+              <div className="w-full h-80 rounded-2xl overflow-hidden bg-slate-900 border border-gray-200 shadow-inner flex items-center justify-center">
+                <img 
+                  src={viewingPhoto.image} 
+                  alt="Patient Lesion Photo" 
+                  className="w-full h-full object-contain" 
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+                <div>
+                  <span className="text-gray-500 uppercase font-bold text-[10px] block font-mono">Reported Condition</span>
+                  <span className="font-bold text-gray-900 mt-0.5 block">{viewingPhoto.condition}</span>
+                </div>
+                <div>
+                  <span className="text-gray-500 uppercase font-bold text-[10px] block font-mono">Triage Severity</span>
+                  <span className="font-bold text-rose-600 mt-0.5 block">{viewingPhoto.severity || 'Moderate'}</span>
+                </div>
+              </div>
+
+              {viewingPhoto.abcde && (
+                <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 space-y-1.5 text-xs">
+                  <p className="font-bold text-blue-950 uppercase text-[10px] tracking-wider">ABCDE Dermoscopic Biomarkers</p>
+                  <p className="text-gray-700"><strong>Asymmetry:</strong> {viewingPhoto.abcde.a}</p>
+                  <p className="text-gray-700"><strong>Border:</strong> {viewingPhoto.abcde.b}</p>
+                  <p className="text-gray-700"><strong>Color:</strong> {viewingPhoto.abcde.c}</p>
+                  <p className="text-gray-700"><strong>Diameter:</strong> {viewingPhoto.abcde.d}</p>
+                  <p className="text-gray-700"><strong>Evolution:</strong> {viewingPhoto.abcde.e}</p>
+                </div>
+              )}
+            </div>
+
+            <div className="p-4 bg-gray-50 border-t border-gray-200 flex justify-end gap-3 shrink-0">
+              <button
+                type="button"
+                onClick={() => {
+                  const p = viewingPhoto;
+                  setViewingPhoto(null);
+                  setPrescribePatient(p);
+                  setRxInstructions(`Prescription issued by ${doctorProfile.name} following lesion photo evaluation.`);
+                }}
+                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm cursor-pointer"
+              >
+                <Pill className="w-3.5 h-3.5" />
+                <span>Prescribe Meds</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const p = viewingPhoto;
+                  setViewingPhoto(null);
+                  setLabPatient(p);
+                  setLabSite(p.bodyPart || 'Cutaneous Lesion');
+                }}
+                className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm cursor-pointer"
+              >
+                <Microscope className="w-3.5 h-3.5" />
+                <span>Order Biopsy</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewingPhoto(null)}
+                className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-xl text-xs font-bold cursor-pointer"
+              >
+                Close Preview
               </button>
             </div>
           </div>
