@@ -75,11 +75,11 @@ export default function LandingPage() {
             </Link>
             <Link href="#reviews" className="hover:text-blue-700 transition-colors">Patient Reviews</Link>
             <div className="ml-auto flex items-center gap-3">
-              <Link href="/login" className="text-gray-600 hover:text-gray-900 font-semibold normal-case text-xs">
+              <Link href="/login?portal=staff" className="text-gray-600 hover:text-gray-900 font-semibold normal-case text-xs">
                 Staff Login
               </Link>
               <Link 
-                href="/register" 
+                href="/login?portal=patient" 
                 className="bg-[#0F4C81] hover:bg-blue-900 text-white px-4 py-1.5 rounded-full text-xs font-bold normal-case shadow-sm transition-all"
               >
                 Book Appointment
@@ -98,8 +98,8 @@ export default function LandingPage() {
             <Link href="/test-3d" onClick={() => setMobileMenuOpen(false)} className="block py-1 text-blue-700">3D Anatomical Radar</Link>
             <Link href="#reviews" onClick={() => setMobileMenuOpen(false)} className="block py-1">Patient Reviews</Link>
             <div className="pt-2 border-t border-gray-100 flex gap-2">
-              <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="w-1/2 py-2 text-center text-xs border border-gray-300 rounded-lg text-gray-700">Staff Portal</Link>
-              <Link href="/register" onClick={() => setMobileMenuOpen(false)} className="w-1/2 py-2 text-center text-xs bg-[#0F4C81] text-white rounded-lg">Book Appt</Link>
+              <Link href="/login?portal=staff" onClick={() => setMobileMenuOpen(false)} className="w-1/2 py-2 text-center text-xs border border-gray-300 rounded-lg text-gray-700">Staff Portal</Link>
+              <Link href="/login?portal=patient" onClick={() => setMobileMenuOpen(false)} className="w-1/2 py-2 text-center text-xs bg-[#0F4C81] text-white rounded-lg">Book Appt</Link>
             </div>
           </div>
         )}
@@ -140,7 +140,7 @@ export default function LandingPage() {
             {/* Action Buttons (Matching Screenshot 1) */}
             <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
               <Link
-                href="/register"
+                href="/login?portal=patient"
                 className="bg-[#D4A034] hover:bg-[#c39129] text-slate-950 font-bold text-sm px-8 py-3.5 rounded-full text-center transition-all shadow-lg shadow-black/30 transform hover:-translate-y-0.5"
               >
                 Book an Appointment
@@ -394,7 +394,7 @@ export default function LandingPage() {
           </p>
           <div className="pt-2">
             <Link
-              href="/register"
+              href="/login?portal=patient"
               className="inline-flex items-center gap-2 bg-[#0F4C81] hover:bg-blue-900 text-white font-bold text-sm px-8 py-3.5 rounded-full transition-all shadow-md"
             >
               <span>Book an Appointment</span>
@@ -445,7 +445,7 @@ export default function LandingPage() {
               <ul className="space-y-2 text-xs text-blue-100">
                 <li><Link href="#about" className="hover:text-amber-400 transition-colors flex items-center gap-1.5"><ChevronRight className="w-3 h-3 text-[#D4A034]" /> Insurance & Cashless TPA</Link></li>
                 <li><Link href="#specialities" className="hover:text-amber-400 transition-colors flex items-center gap-1.5"><ChevronRight className="w-3 h-3 text-[#D4A034]" /> Health Blog & Clinical Articles</Link></li>
-                <li><Link href="/register" className="hover:text-amber-400 transition-colors flex items-center gap-1.5"><ChevronRight className="w-3 h-3 text-[#D4A034]" /> Book Outpatient Appointment</Link></li>
+                <li><Link href="/login?portal=patient" className="hover:text-amber-400 transition-colors flex items-center gap-1.5"><ChevronRight className="w-3 h-3 text-[#D4A034]" /> Book Outpatient Appointment</Link></li>
                 <li><Link href="/test-3d" className="hover:text-amber-400 transition-colors flex items-center gap-1.5"><ChevronRight className="w-3 h-3 text-[#D4A034]" /> 3D Anatomical Lesion Radar</Link></li>
                 <li><Link href="/DermXAI_Project_Code_Guide.pdf" target="_blank" className="hover:text-amber-400 transition-colors flex items-center gap-1.5 text-amber-300 font-bold"><ChevronRight className="w-3 h-3 text-[#D4A034]" /> Technical Architecture PDF</Link></li>
               </ul>
@@ -467,7 +467,7 @@ export default function LandingPage() {
             <div>
               <h4 className="font-serif-hospital text-lg font-normal text-white mb-3">For Employees</h4>
               <Link 
-                href="/login"
+                href="/login?portal=staff"
                 className="bg-blue-900/40 hover:bg-blue-900/70 border border-blue-400/30 p-4 rounded-2xl flex items-center gap-3 transition-all group block shadow-md"
               >
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white shrink-0 group-hover:scale-105 transition-transform">
@@ -500,7 +500,7 @@ export default function LandingPage() {
           <span className="text-[10px] font-bold mt-1">Doctors</span>
         </Link>
 
-        <Link href="/register" className="flex flex-col items-center text-gray-600 hover:text-[#0F4C81]">
+        <Link href="/login?portal=patient" className="flex flex-col items-center text-gray-600 hover:text-[#0F4C81]">
           <Calendar className="w-5 h-5 text-gray-500" />
           <span className="text-[10px] font-bold mt-1">Book Appt</span>
         </Link>
@@ -517,7 +517,7 @@ export default function LandingPage() {
           <span className="text-[10px] font-bold mt-1">Call Us</span>
         </a>
 
-        <Link href="/login" className="flex flex-col items-center text-gray-600 hover:text-[#0F4C81]">
+        <Link href="/login?portal=staff" className="flex flex-col items-center text-gray-600 hover:text-[#0F4C81]">
           <Lock className="w-5 h-5 text-gray-500" />
           <span className="text-[10px] font-bold mt-1">Staff Portal</span>
         </Link>
