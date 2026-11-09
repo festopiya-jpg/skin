@@ -59,19 +59,11 @@ export default function RegisterPage() {
         return;
       }
 
-      if (res.isPendingApproval) {
-        setSuccessInfo({
-          type: 'PENDING_APPROVAL',
-          title: 'Staff Registration Submitted!',
-          message: `Your ${role.toUpperCase()} account has been registered. Because this is a clinical hospital role, it is PENDING approval from Hospital Administrator (waheeddeveloper@gmail.com). You will be able to log in as soon as Admin approves your account in the Admin Desk.`
-        });
-      } else {
-        setSuccessInfo({
-          type: 'APPROVED',
-          title: 'Account Created Successfully!',
-          message: 'Your patient account is active. You can now log in to access the DermXAI Diagnostic Portal.'
-        });
-      }
+      setSuccessInfo({
+        type: 'PENDING_APPROVAL',
+        title: 'Registration Submitted for Admin Approval!',
+        message: `Your ${role.toUpperCase()} account (${cleanName}) has been registered. All first-time sign-ups are protected by administrative security and are PENDING approval by Hospital Administrator (waheeddeveloper@gmail.com). You can sign in as soon as Admin approves your account in the Admin Tower.`
+      });
 
     } catch (error) {
       console.error('Registration error:', error);

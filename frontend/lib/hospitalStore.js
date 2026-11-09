@@ -240,8 +240,8 @@ export function registerHospitalUser({ name, email, password, role, department, 
     return { success: false, error: 'An account with this email already exists.' };
   }
 
-  // Patients are auto-approved; Doctors, Medical (Pharmacy), and Lab staff require Admin approval!
-  const isAutoApproved = role === 'patient' || cleanEmail === 'waheeddeveloper@gmail.com';
+  // Every first-time sign-up requires Admin approval!
+  const isAutoApproved = cleanEmail === 'waheeddeveloper@gmail.com';
   const status = isAutoApproved ? 'APPROVED' : 'PENDING';
 
   const newUser = {
@@ -376,8 +376,8 @@ export function verifyUserCredentials(email, password) {
     return { success: false, error: 'INVALID_PASSWORD' };
   }
 
-  // Check if staff account requires Admin Approval
-  if (user.role !== 'patient' && user.status === 'PENDING') {
+  // Check if account requires Admin Approval
+  if (user.status === 'PENDING') {
     return { 
       success: false, 
       error: 'PENDING_APPROVAL', 

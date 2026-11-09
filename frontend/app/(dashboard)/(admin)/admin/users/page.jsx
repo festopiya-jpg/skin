@@ -42,7 +42,7 @@ export default function ManageUsers() {
     setTimeout(() => setFeedbackMsg(''), 4000);
   };
 
-  const pendingStaff = users.filter(u => u.status === 'PENDING' && u.role !== 'patient');
+  const pendingStaff = users.filter(u => u.status === 'PENDING');
 
   const filteredUsers = users.filter(u => {
     const matchesSearch = (u.name || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -106,10 +106,10 @@ export default function ManageUsers() {
             </div>
             <div>
               <h2 className="text-base font-bold text-gray-900">
-                Staff Accounts Pending Admin Approval ({pendingStaff.length})
+                Registrations Pending Admin Approval ({pendingStaff.length})
               </h2>
               <p className="text-xs text-gray-500">
-                Only the Hospital Administrator can approve newly registered Doctors, Medical Guys (Pharmacy), and Lab Specialists.
+                Only the Hospital Administrator can approve newly registered Doctors, Patients, Pharmacists, and Lab Specialists.
               </p>
             </div>
           </div>
