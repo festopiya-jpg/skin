@@ -198,7 +198,7 @@ export default function AppointmentsPage() {
                   <div className="mt-4 pt-3 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                     <p className="text-[11px] text-gray-500 flex items-center gap-1">
                       <Mail className="w-3.5 h-3.5 text-emerald-600" />
-                      <span>Official Gmail confirmation dispatched from <strong>waheeddeveloper@gmail.com</strong></span>
+                      <span>Official email confirmation dispatched from <strong>Hospital Administration</strong></span>
                     </p>
                     <Link
                       href="/patient/dashboard"
@@ -254,7 +254,7 @@ export default function AppointmentsPage() {
                     WAITING ADMIN APPROVAL
                   </span>
                   <p className="text-[11px] text-gray-500 mt-1.5">
-                    waheeddeveloper@gmail.com will verify payment & email appointment time.
+                    Hospital Administration will verify payment & email appointment time.
                   </p>
                 </div>
               </div>
@@ -298,7 +298,7 @@ export default function AppointmentsPage() {
                 </div>
                 <h4 className="font-serif-hospital text-2xl font-normal text-gray-900">Appointment Request & Payment Submitted!</h4>
                 <p className="text-xs text-gray-600 max-w-sm mx-auto leading-relaxed">
-                  Your fee payment of <strong>₹500.00</strong> (UTR: <strong>{utrNumber}</strong>) has been submitted to Hospital Admin. You will receive an official Gmail confirmation from <strong>waheeddeveloper@gmail.com</strong>.
+                  Your fee payment of <strong>₹500.00</strong> (UTR: <strong>{utrNumber}</strong>) has been submitted to Hospital Admin. You will receive an official email confirmation from <strong>Hospital Administration</strong>.
                 </p>
                 <div className="p-3 bg-blue-50 border border-blue-200 rounded-2xl text-xs text-blue-950 font-medium leading-relaxed">
                   Next Step: Upload photos of your skin condition now to run the AI scan and view the exact clinical results transmitted to your doctor!
@@ -467,7 +467,7 @@ export default function AppointmentsPage() {
                 <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-[11px] text-amber-900 flex items-start gap-2">
                   <ShieldCheck className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                   <span>
-                    Upon submitting, Hospital Administrator (<strong>waheeddeveloper@gmail.com</strong>) will verify payment to <strong>ABDUL WAHEED</strong> and email your confirmed appointment date and time.
+                    Upon submitting, <strong>Hospital Administration</strong> will verify payment to <strong>ABDUL WAHEED</strong> and email your confirmed appointment date and time.
                   </span>
                 </div>
 

@@ -307,7 +307,7 @@ export default function PatientDashboard() {
                   Official Appointment Confirmed
                 </span>
                 <span className="text-[10px] font-mono font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2 py-0.5 rounded-full">
-                  From: waheeddeveloper@gmail.com
+                  From: Hospital Administration
                 </span>
               </div>
               <p className="text-xs text-gray-800 mt-1">

@@ -93,7 +93,7 @@ export default function AdminDashboard() {
               </span>
             </div>
             <p className="text-slate-300 text-xs md:text-sm mt-1">
-              DermXAI Multi-Speciality Hospital & Research Institute • Admin: <span className="font-mono text-cyan-300">waheeddeveloper@gmail.com</span>
+              DermXAI Multi-Speciality Hospital & Research Institute • Status: <span className="font-mono text-cyan-300">Super Administrator (Active)</span>
             </p>
           </div>
         </div>
@@ -328,13 +328,13 @@ export default function AdminDashboard() {
                     <button 
                       onClick={() => handleConfirmRequest(req)}
                       className="w-full lg:w-48 py-3 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs uppercase tracking-wider shadow-md shadow-emerald-600/30 transition-all flex items-center justify-center gap-1.5 cursor-pointer text-center"
-                      title="Approve payment and dispatch confirmation email from waheeddeveloper@gmail.com"
+                      title="Approve payment and dispatch official confirmation email"
                     >
                       <Mail className="w-4 h-4" />
                       <span>Approve & Send Gmail</span>
                     </button>
                     <span className="text-[10px] text-gray-400 text-center block w-full font-mono">
-                      Sender: waheeddeveloper@gmail.com
+                      Sender: Hospital Administration
                     </span>
                   </div>
 
@@ -433,7 +433,7 @@ export default function AdminDashboard() {
             <div className="my-4 p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-2">
               <div className="flex justify-between items-center pb-2 border-b border-slate-200 text-[11px]">
                 <span className="text-gray-500">From:</span>
-                <span className="font-bold text-gray-900 font-mono">waheeddeveloper@gmail.com</span>
+                <span className="font-bold text-gray-900 font-mono">Hospital Administration (Official Dispatch)</span>
               </div>
               <div className="flex justify-between items-center pb-2 border-b border-slate-200 text-[11px]">
                 <span className="text-gray-500">To:</span>

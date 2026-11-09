@@ -79,7 +79,7 @@ export default function RegisterPage() {
         setSuccessInfo({
           type: 'PENDING_APPROVAL',
           title: 'Staff Registration Submitted for Admin Approval!',
-          message: `Your ${role.toUpperCase()} account (${cleanName}) has been registered. Clinical employee accounts are protected by hospital security protocols and are PENDING approval by Hospital Administrator (waheeddeveloper@gmail.com). You will be able to sign in once approved in the Admin Tower.`
+          message: `Your ${role.toUpperCase()} account (${cleanName}) has been registered. Clinical employee accounts are protected by hospital security protocols and are PENDING approval by Hospital Administration. You will be able to sign in once approved in the Admin Tower.`
         });
       }
 

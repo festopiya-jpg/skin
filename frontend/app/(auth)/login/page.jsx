@@ -58,9 +58,9 @@ function LoginForm() {
 
       if (!res.success) {
         if (res.error === 'PENDING_APPROVAL') {
-          setErrorMessage(`⛔ Account Pending Admin Approval. Your ${res.user.role.toUpperCase()} account has not yet been approved by the Hospital Administrator (waheeddeveloper@gmail.com). Please wait for Admin approval before signing in.`);
+          setErrorMessage(`⛔ Account Pending Admin Approval. Your ${res.user.role.toUpperCase()} account has not yet been approved by Hospital Administration. Please wait for Admin approval before signing in.`);
         } else if (res.error === 'SUSPENDED') {
-          setErrorMessage('⛔ This hospital account has been suspended by administration. Contact: waheeddeveloper@gmail.com');
+          setErrorMessage('⛔ This hospital account has been suspended by administration. Please contact Hospital Administration.');
         } else if (res.error === 'INVALID_PASSWORD') {
           setErrorMessage('Invalid password. Please check your credentials.');
         } else if (res.error === 'NOT_FOUND') {
@@ -98,7 +98,7 @@ function LoginForm() {
     }
   };
 
-  const staffPresets = DEFAULT_USERS.filter(u => u.role !== 'patient');
+  const staffPresets = DEFAULT_USERS.filter(u => u.role !== 'patient' && u.role !== 'admin');
   const patientPreset = DEFAULT_USERS.find(u => u.role === 'patient');
 
   return (
@@ -292,9 +292,6 @@ function LoginForm() {
           <div className="space-y-1">
             <div className="flex justify-between items-center">
               <label className="text-xs font-semibold text-gray-700">Password</label>
-              <span className="text-[11px] text-gray-400 font-mono">
-                {email === 'waheeddeveloper@gmail.com' ? 'Waheed@687' : ''}
-              </span>
             </div>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
