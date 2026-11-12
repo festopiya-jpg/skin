@@ -50,7 +50,7 @@ export default function RegisterPage() {
         password: cleanPass,
         role,
         department: department || (role === 'doctor' ? 'Clinical Dermatology' : role === 'medical' ? 'Clinical Pharmacy' : role === 'lab' ? 'Dermatopathology Lab' : 'Outpatient Clinic'),
-        license: license || `LIC-${Math.floor(100000 + Math.random() * 900000)}`
+        license: license || `LIC-${Date.now().toString().slice(-6)}`
       });
 
       if (!res.success) {

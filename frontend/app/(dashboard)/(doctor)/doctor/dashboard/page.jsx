@@ -58,7 +58,7 @@ export default function DoctorDashboard() {
   }, []);
 
   const generateReturnCode = (patient) => {
-    const code = 'VISIT-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+    const code = 'VISIT-' + Date.now().toString(36).slice(-6).toUpperCase();
     const pName = patient.patientName || patient.name || 'Patient';
     const newRecord = {
       id: Date.now(),

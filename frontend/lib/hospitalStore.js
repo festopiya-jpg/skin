@@ -277,7 +277,7 @@ export function registerHospitalUser({ name, email, password, role, department, 
     password: cleanPass,
     role: userRole,
     department: department || (userRole === 'doctor' ? 'Clinical Dermatology' : userRole === 'medical' ? 'Clinical Pharmacy' : userRole === 'lab' ? 'Pathology Diagnostics' : 'Outpatient Clinic'),
-    license: license || `LIC-${Math.floor(100000 + Math.random() * 900000)}`,
+    license: license || `LIC-${Date.now().toString().slice(-6)}`,
     status,
     createdAt: new Date().toISOString()
   };
@@ -454,11 +454,11 @@ export function createAppointmentRequest(data) {
   initHospitalStore();
   const requests = getStorage('appointment_requests', []);
   const newReq = {
-    id: `REQ-${Math.floor(1000 + Math.random() * 9000)}`,
+    id: `REQ-${Date.now().toString().slice(-6)}`,
     status: 'Payment Pending Admin Approval',
     paymentStatus: data.paymentStatus || 'PAID_PENDING_ADMIN_VERIFICATION',
     amount: data.amount || '₹500.00',
-    utrNumber: data.utrNumber || `UTR-${Math.floor(100000000000 + Math.random() * 900000000000)}`,
+    utrNumber: data.utrNumber || `UTR-${Date.now().toString()}`,
     paymentReceipt: data.paymentReceipt || null,
     paymentMethod: 'UPI QR Pay',
     createdAt: new Date().toISOString(),
@@ -487,7 +487,7 @@ export function confirmAppointment(requestId, { datetime, room, notes, doctorNam
   const patientName = target?.patientName || 'Patient';
 
   const confirmedItem = {
-    id: `APT-${Math.floor(1000 + Math.random() * 9000)}`,
+    id: `APT-${Date.now().toString().slice(-6)}`,
     requestId: target?.id,
     patientName,
     patientEmail,
@@ -619,7 +619,7 @@ export function recordPatientDiagnosis(diagnosis) {
   initHospitalStore();
   const existing = getStorage('pending_diagnoses', DEFAULT_DIAGNOSES);
   const newEntry = {
-    id: `DX-${Math.floor(10000 + Math.random() * 90000)}`,
+    id: `DX-${Date.now().toString().slice(-6)}`,
     timestamp: new Date().toLocaleString('en-US'),
     status: 'Pending Doctor Review',
     ...diagnosis
@@ -650,7 +650,7 @@ export function createPrescriptionOrder(order) {
   initHospitalStore();
   const existing = getStorage('pending_medical', DEFAULT_PRESCRIPTIONS);
   const newOrder = {
-    id: `RX-${Math.floor(100 + Math.random() * 900)}`,
+    id: `RX-${Date.now().toString().slice(-6)}`,
     date: new Date().toLocaleDateString(),
     status: 'Pending Dispensation',
     ...order
@@ -668,7 +668,7 @@ export function createLabOrder(order) {
   initHospitalStore();
   const existing = getStorage('pending_lab', DEFAULT_LAB_ORDERS);
   const newOrder = {
-    id: `LAB-${Math.floor(100 + Math.random() * 900)}`,
+    id: `LAB-${Date.now().toString().slice(-6)}`,
     date: new Date().toLocaleDateString(),
     status: 'Specimen Queued',
     ...order

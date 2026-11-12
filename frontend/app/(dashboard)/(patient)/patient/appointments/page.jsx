@@ -78,7 +78,7 @@ export default function AppointmentsPage() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const cleanUtr = utrNumber.trim() || `UTR-${Math.floor(100000000000 + Math.random() * 900000000000)}`;
+    const cleanUtr = utrNumber.trim() || `UTR-${Date.now().toString()}`;
 
     createAppointmentRequest({
       patientName: patientUser.name,
